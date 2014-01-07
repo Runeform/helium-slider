@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <style type="text/css">
+    /* ==========================================================================
+       Demo styles
+       ========================================================================== */
+
+    body{
+    margin:0;
+    padding: 60px;
+    background-color: #efefef;
+    font-family: helvetica, sans-serif;
+    color:#777;
+    }
+    h1, h2, h3{
+    color: #555;
+    margin: 0;
+    padding: 0 0 15px;
+    }
+    h2{padding: 15px 0 15px;}
+    p{margin:0 0 6px;}
+    textarea{
+    margin:0 0 10px;
+    width: 100%;
+    background-color: #666;
+    color: #dedede;
+    border:0px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    font-size: 11px;
+    font-family: "Courier New", Courier, monospace;
+    }
+    textarea:focus{outline: none; background-color: #444;}
+    ul.features{
+    margin:0;
+    font-size: 14px;
+    }
+    ul.features li{margin-bottom: 2px;}
+    a.selector{ font-size: 12px; color:#47b; text-decoration: none; font-weight: bold; float: right;}
+
+    /* ==========================================================================
+       Helium Slider styles
+       ========================================================================== */
+
+    /*==== essential styles ====*/
+    div.helium-slider{
+    width: 100%;
+    position: relative;
+    margin: 0;
+    }
+    div.helium-slider div.slide-window{
+    width: 100%;
+    overflow:hidden;
+    position: relative;
+    margin: 0;
+    }
+    div.helium-slider.loading{
+    background: url('img/loading.gif') no-repeat center center;
+    }
+    div.helium-slider ul.slide-holder{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    opacity: 0;
+    }
+    div.helium-slider ul.slide-holder li{
+    position: relative;
+    float:left;
+    }
+    div.helium-slider ul.slide-holder li.loop{
+    position: absolute !important;
+    float:none !important;
+    }
+    div.helium-slider ul.slide-holder li .slide img{
+    width:100%;
+    }
+    div.helium-slider ul.slide-holder li .pane{
+    position: absolute;
+    }
+
+    /*==== customizable elements ====*/
+    div.helium-slider .next, div.helium-slider .prev{
+    font-size: 24px;
+    font-weight: bold;
+    color: #555;
+    position: absolute;
+    top:45%;
+    cursor: pointer;
+    z-index: 10;
+    }
+    div.helium-slider .next{right:10px;}
+    div.helium-slider .prev{left:10px;}
+    div.helium-slider ul.slide-holder li .caption{
+    left: 30px;
+    bottom: 10px;
+    }
+    div.helium-slider ul.slide-holder li .caption2{
+    right: 50px;
+    bottom: 10px;
+    }
+    div.helium-slider ul.slide-holder li .caption3{
+    right: 50px;
+    top: 10px;
+    }
+    div.helium-slider div.pauser{
+    position: absolute;
+    left: 50%;
+    top:50%;
+    border-right: 15px solid #fff;
+    border-left: 15px solid #fff;
+    width : 12px;
+    height: 60px;
+    margin-left: -21px;
+    margin-top: -30px;
+    z-index: 11;
+    opacity: 0.5;
+    }
+    div.helium-slider ul.slide-nav{
+    text-align: center;
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    bottom:10px;
+    width: 100%;
+    z-index: 11;
+    display: none;
+    }
+    div.helium-slider ul.slide-nav li{
+    background: #666;
+    margin: 0px 4px;
+    height:10px;
+    width: 10px;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 5px;
+    }
+    div.helium-slider ul.slide-nav li.active{
+    background: #333;
+    }
+    </style>
+</head>
+<body style="margin:0;">
+    <h1>Helium-slider</h1>
+    <p>Helium-slider is a responsive jQuery image slider, built by Harun Eggleton under the open source MIT licenece.</p>
+    <h2>Features:</h2>
+    <ul class="features">
+        <li>fader/slider modes</li>
+        <li>optional navigation buttons</li>
+        <li>optional pause on hover</li>
+        <li>autoplay</li>
+        <li>adjustible animation speeds/delays</li>
+        <li>afterSlide callback for custom javascipt after each slide transitions</li>
+        <li> any number of individually animated panes on each slide (these fully customizable HTML elements each have thier own options for speed, delay, x offset, y offset and fade.)</li>
+    </ul>
+    <h2>Examples:</h2>
+    <div id="slider-eg-1" class="helium-slider loading">
+        <div class="next">next</div><div class="prev">prev</div>
+        <ul class="slide-nav">
+        </ul>
+        <div class="slide-window">
+            <ul class="slide-holder">
+                <li>
+                    <div class="slide"><img src="http://placehold.it/900x400&text=slide1"></div>
+                    <div class="pane caption">Editable HTML Pane1</div>
+                    <div class="pane caption2">Editable HTML Pane2</div>
+                    <div class="pane caption3">Editable HTML Pane3</div>
+                </li>
+                <li>
+                    <div class="slide"><img src="http://placehold.it/900x400&text=slide2"></div>
+                    <div class="pane caption">Editable HTML Pane1</div>
+                    <div class="pane caption2">Editable HTML Pane2</div>
+                    <div class="pane caption3">Editable HTML Pane3</div>
+                </li>
+                <li>
+                    <div class="slide"><img src="http://placehold.it/900x400&text=slide3"></div>
+                    <div class="pane caption">Editable HTML Pane1</div>
+                    <div class="pane caption2">Editable HTML Pane2</div>
+                    <div class="pane caption3">Editable HTML Pane3</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="slider-eg-2" class="helium-slider loading">
+        <div class="next">next</div><div class="prev">prev</div>
+        <ul class="slide-nav">
+        </ul>
+        <div class="slide-window">
+            <ul class="slide-holder">
+                <li>
+                    <div class="slide"><img src="http://placehold.it/900x400&text=slide1"></div>
+                </li>
+                <li>
+                    <div class="slide"><img src="http://placehold.it/900x400&text=slide2"></div>
+                </li>
+                <li>
+                    <div class="slide"><img src="http://placehold.it/900x400&text=slide3"></div>
+                </li>
+                <li>
+                    <div class="slide"><img src="http://placehold.it/900x400&text=slide4"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <h2>Usage:</h2>
+    <h3>1: Include required files</h3>
+    <p>include the following scripts as follows before the end of the BODY tag</p>
+    <a href="" class="selector" title="">&#8595; select all</a>
+    <textarea readonly name="" style="height:45px;">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="js/helium.mutate.js"></script>
+    <script src="js/helium.slider.js"></script></textarea>
+    <h3>2: Add required HTML</h3>
+    <p>add the following HTML wherever you want your slider to appear</p>
+    <a href="" class="selector" title="">&#8595; select all</a>
+<textarea name="" style="height:280px" readonly>
+<div id="your-slider-id" class="helium-slider loading">
+    <div class="next">next</div><div class="prev">prev</div>
+    <ul class="slide-nav">
+    </ul>
+    <div class="slide-window">
+        <ul class="slide-holder">
+            <li>
+                <div class="slide"><img src="http://placehold.it/900x400&text=slide1"></div>
+                <div class="pane">Editable HTML Pane</div>
+            </li>
+            <li>
+                <div class="slide"><img src="http://placehold.it/900x400&text=slide2"></div>
+                <div class="pane">Editable HTML Pane</div>
+            </li>
+            <li>
+                <div class="slide"><img src="http://placehold.it/900x400&text=slide3"></div>
+                <div class="pane">Editable HTML Pane</div>
+            </li>
+        </ul>
+    </div>
+</div></textarea>
+    <h3>3: Add CSS</h3>
+    <p>Add the following CSS in main.css (or any desired css location)</p>
+    <a href="" class="selector" title="">&#8595; select all</a>
+<textarea readonly name="" style="height:1340px;">
+/* ==========================================================================
+   Helium Slider styles
+   ========================================================================== */
+
+/*==== essential styles ====*/
+div.helium-slider{
+width: 100%;
+position: relative;
+margin: 0;
+}
+div.helium-slider div.slide-window{
+width: 100%;
+overflow:hidden;
+position: relative;
+margin: 0;
+}
+div.helium-slider.loading{
+background: url('img/loading.gif') no-repeat center center;
+}
+div.helium-slider ul.slide-holder{
+list-style-type: none;
+padding: 0;
+margin: 0;
+position: relative;
+opacity: 0;
+}
+div.helium-slider ul.slide-holder li{
+position: relative;
+float:left;
+}
+div.helium-slider ul.slide-holder li.loop{
+position: absolute !important;
+float:none !important;
+}
+div.helium-slider ul.slide-holder li .slide img{
+width:100%;
+}
+div.helium-slider ul.slide-holder li .pane{
+position: absolute;
+}
+
+/*==== customizable elements ====*/
+div.helium-slider .next, div.helium-slider .prev{
+font-size: 24px;
+font-weight: bold;
+color: #555;
+position: absolute;
+top:45%;
+cursor: pointer;
+z-index: 10;
+}
+div.helium-slider .next{right:10px;}
+div.helium-slider .prev{left:10px;}
+div.helium-slider ul.slide-holder li .caption{
+left: 30px;
+bottom: 10px;
+}
+div.helium-slider ul.slide-holder li .caption2{
+right: 50px;
+bottom: 10px;
+}
+div.helium-slider ul.slide-holder li .caption3{
+right: 50px;
+top: 10px;
+}
+div.helium-slider div.pauser{
+position: absolute;
+left: 50%;
+top:50%;
+border-right: 15px solid #fff;
+border-left: 15px solid #fff;
+width : 12px;
+height: 60px;
+margin-left: -21px;
+margin-top: -30px;
+z-index: 11;
+opacity: 0.5;
+}
+div.helium-slider ul.slide-nav{
+text-align: center;
+list-style-type: none;
+margin: 0px;
+padding: 0px;
+position: absolute;
+bottom:10px;
+width: 100%;
+z-index: 11;
+display: none;
+}
+div.helium-slider ul.slide-nav li{
+background: #666;
+margin: 0px 4px;
+height:10px;
+width: 10px;
+display: inline-block;
+cursor: pointer;
+border-radius: 5px;
+}
+div.helium-slider ul.slide-nav li.active{
+background: #333;
+}    </textarea>
+    <h3>4: initialize</h3>
+    <p>Place the follow before the end of the BODY tag to initialize your slider.  this example includes all options for initializing slider with commented descriptions</p>
+    <a href="" class="selector" title="">&#8595; select all</a>
+<textarea readonly name="" style="height:290px;">
+<script type="text/javascript" charset="utf-8">
+$(function() {
+$("#your-slider-id").heliumSlider({
+paneFade: true ,        // pane fade in: true or false
+paneXOffset: [300] ,    // pane animate X offset: pixel value
+paneYOffset: [0] ,      // pane animate Y offset: pixel value
+paneDelay: [1000] ,     // pane delay before animate: milliseconds
+paneSpeed: [1500] ,     // pane speed of animate: milliseconds
+useNav: true ,          // use navigation: true or false
+autoPlay: 6000 ,        // auto play slides. delay between transitions: milliseconds (negative values reverse direction.  any value between -20 and 20 disables autoplay)
+speed: 500 ,            // speed of main slide animation (when using fader mode, speed becomes the delay between fade in and fade out animations.)
+easing: "swing" ,       // easing type: "swing" or "linear"
+mainFadeIn: false ,     // fade new slide in speed: milliseconds or false (mainFadeOut must be set)
+mainFadeOut: false ,    // fade old slide out speed: milliseconds or false (mainFadeIn must be set)
+afterSlide: function(){
+// this callback function fires after the main slide transition takes place
+} ,
+pauseOnHover: true      // pause autoplay on hover: true or false
+});
+});
+</script></textarea>
+    <h3>Using Panes</h3>
+    <p>Pane elements must be positioned absolutely from top or bottom, and left or right.</p>   <p>The animation of the pane is defined by the pane settings (paneXOffset, paneYOffset, paneDelay, paneSpeed). Offsets animate the provided number in pixels, in the same direction as the slide animation. This direction may be reversed by entering a negative value.</p> <p>To add more panes, simply add more pane elements in your html. you can add an additional class to each of them to position them differently.</p>
+    <p>To animate multiple panes differently separate the desired settings with commas. The values will apply in sequence to the panesin each slide.  In the below example 100 will apply to the first pane, 200 to the second, and 300 to the third.</p>
+    <a href="" class="selector" title="">&#8595; select all</a>
+<textarea name="" style="height:80px" readonly>
+<li>
+    <div class="slide"><img src="http://placehold.it/900x400&text=slide1"></div>
+    <div class="pane caption">Editable HTML Pane</div>
+    <div class="pane caption-image">Editable HTML Pane</div>
+    <div class="pane logo">Editable HTML Pane</div>
+</li></textarea>
+    <a href="" class="selector" title="">&#8595; select all</a>
+<textarea readonly name="" style="height:140px;">
+<script type="text/javascript" charset="utf-8">
+$(function() {
+$("#your-slider-id").heliumSlider({
+paneFade: true ,              // pane fade in: true or false
+paneXOffset: [100,200,300] ,  // pane animate X offset: pixel value
+paneYOffset: [100,200,300] ,  // pane animate Y offset: pixel value
+paneDelay: [100,200,300] ,    // pane delay before animate: milliseconds
+paneSpeed: [100,200,300]      // pane speed of animate: milliseconds
+});
+});
+</script></textarea>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
+    <script src="js/helium.mutate.js"></script>
+    <script src="js/helium.slider.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    $(function() {
+    $("#slider-eg-1").heliumSlider({
+    paneFade: true ,
+    paneXOffset: [0,0,300] ,
+    paneYOffset: [200,100,0] ,
+    paneDelay: [2500,2000,1500] ,
+    paneSpeed: [600,1000,1200] ,
+    mainFadeIn: false ,
+    mainFadeOut: false ,
+    speed: 2000,
+    autoPlay: 3000,
+    pauseOnHover: false,
+    easing: 'linear'
+    });
+    $("#slider-eg-2").heliumSlider({
+    mainFadeIn: false ,
+    mainFadeOut: false ,
+    speed: 0,
+    autoPlay: 3000,
+    pauseOnHover: false,
+    mainFadeIn: 2000 ,     // fade new slide in speed: milliseconds or false
+    mainFadeOut: 300 ,    // fade old slide out speed: milliseconds or false
+    easing: 'swing'
+    });
+    $('.selector').click(function(){
+    $(this).next().focus().select();
+    return false;
+    });
+    });
+    </script>
+</body>
+</html>

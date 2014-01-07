@@ -165,19 +165,19 @@
 // (Creates nav items and populates this.vars.targetSlide var for next and prev functions)
 //============================================================================
 			initNav: function () {
-				$('.slide-nav').show();
+				$(this.element).find('.slide-nav').show();
 				var g = 1;
-				$('.slide-nav').html(' ')
+				$(this.element).find('.slide-nav').html(' ')
 				for (g = 1; g <= this.vars.slideCount; ++g)  {
-					$('.slide-nav').html($('.slide-nav').html() + '<li data-slide-index="'+g+'"></li>');
+					$(this.element).find('.slide-nav').html($(this.element).find('.slide-nav').html() + '<li data-slide-index="'+g+'"></li>');
 				}
 			},
 			updateNav: function () {
-				if($('.slide-nav li').length != this.vars.slideCount){
-					initNav();
+				if($(this.element).find('.slide-nav li').length != this.vars.slideCount){
+					this.initNav();
 				}
-				$('.slide-nav li').removeClass('active');
-				$('.slide-nav li:nth-child('+this.vars.curr+')').addClass('active');
+				$(this.element).find('.slide-nav li').removeClass('active');
+				$(this.element).find('.slide-nav li:nth-child('+this.vars.curr+')').addClass('active');
 			},
 			gotoSlide: function () {		
 					if(this.vars.targetSlide > this.vars.curr){
