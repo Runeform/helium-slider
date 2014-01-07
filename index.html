@@ -14,6 +14,8 @@
 /* ==========================================================================
    Helium Slider styles
    ========================================================================== */
+
+/*==== essential styles ====*/
 div.helium-slider{
   width: 100%;
   position: relative;
@@ -28,17 +30,6 @@ div.helium-slider div.slide-window{
 div.helium-slider.loading{
   background: url('img/loading.gif') no-repeat center center;
 }
-div.helium-slider .next, div.helium-slider .prev{
-  font-size: 24px;
-  font-weight: bold;
-  color: #555;
-  position: absolute;
-  top:45%;
-  cursor: pointer;
-  z-index: 10;
-}
-div.helium-slider .next{right:10px;}
-div.helium-slider .prev{left:10px;}
 div.helium-slider ul.slide-holder{
   list-style-type: none;
   padding: 0;
@@ -57,20 +48,36 @@ div.helium-slider ul.slide-holder li.loop{
 div.helium-slider ul.slide-holder li .slide img{
   width:100%;
 }
-div.helium-slider ul.slide-holder li .caption3{
+div.helium-slider ul.slide-holder li .pane{
   position: absolute;
-  right: 50px;
-  top: 10px;
 }
-div.helium-slider ul.slide-holder li .caption2{
+
+
+
+/*==== customizable elements ====*/
+div.helium-slider .next, div.helium-slider .prev{
+  font-size: 24px;
+  font-weight: bold;
+  color: #555;
   position: absolute;
-  right: 50px;
-  bottom: 10px;
+  top:45%;
+  cursor: pointer;
+  z-index: 10;
 }
+div.helium-slider .next{right:10px;}
+div.helium-slider .prev{left:10px;}
+
 div.helium-slider ul.slide-holder li .caption{
-  position: absolute;
   left: 30px;
   bottom: 10px;
+}
+div.helium-slider ul.slide-holder li .caption2{
+  right: 50px;
+  bottom: 10px;
+}
+div.helium-slider ul.slide-holder li .caption3{
+  right: 50px;
+  top: 10px;
 }
 div.helium-slider div.pauser{
   position: absolute;
@@ -112,7 +119,21 @@ div.helium-slider ul.slide-nav li.active{
     </head>
     <body style="margin:0;">
 
-
+<p>Helium-slider</p>
+<p>Helium-slider is a responsive jQuery image slider, built by Harun Eggleton under the open source MIT licenece.</p>
+<p>features
+	<ul>
+		<li>fader/slider modes</li>
+		<li>optional navigation buttons</li>
+		<li>optional pause on hover</li>
+		<li>autoplay</li>
+		<li>adjustible animation speeds/delays</li>
+		<li>afterSlide callback for custom javascipt after each slide transitions</li>
+		<li> any number of individually animated panes on each slide (these fully customizable HTML elements each have thier own options for speed, delay, x offset, y offset and fade.)</li>
+	</ul>
+</p>
+<p>usage:</p>
+<textarea name="">
 <div id="sliderid" class="helium-slider loading">
 <div class="next">next</div><div class="prev">prev</div>
 <ul class="slide-nav">
@@ -121,45 +142,67 @@ div.helium-slider ul.slide-nav li.active{
   <ul class="slide-holder">
     <li>
       <div class="slide"><img src="http://placehold.it/900x400&text=slide1"></div>
-      <div class="pane caption">Editable HTML Panes</div>
-      <div class="pane caption2">Editable HTML Panes2</div>
-      <div class="pane caption3">Editable HTML Panes3</div>
+      <div class="pane">Editable HTML Pane</div>
     </li>
     <li>
       <div class="slide"><img src="http://placehold.it/900x400&text=slide2"></div>
-      <div class="pane caption">Editable HTML Panes</div>
-      <div class="pane caption2">Editable HTML Panes2</div>
-      <div class="pane caption3">Editable HTML Panes3</div>
+      <div class="pane">Editable HTML Pane</div>
     </li>
     <li>
       <div class="slide"><img src="http://placehold.it/900x400&text=slide3"></div>
-      <div class="pane caption">Editable HTML Panes</div>
-      <div class="pane caption2">Editable HTML Panes2</div>
-      <div class="pane caption3">Editable HTML Panes3</div>
+      <div class="pane">Editable HTML Pane</div>
+    </li>
+  </ul>
+</div>
+</div>
+</textarea>
+<div id="sliderid" class="helium-slider loading">
+<div class="next">next</div><div class="prev">prev</div>
+<ul class="slide-nav">
+</ul>
+<div class="slide-window">  
+  <ul class="slide-holder">
+    <li>
+      <div class="slide"><img src="http://placehold.it/900x400&text=slide1"></div>
+      <div class="pane caption">Editable HTML Pane1</div>
+      <div class="pane caption2">Editable HTML Pane2</div>
+      <div class="pane caption3">Editable HTML Pane3</div>
+    </li>
+    <li>
+      <div class="slide"><img src="http://placehold.it/900x400&text=slide2"></div>
+      <div class="pane caption">Editable HTML Pane1</div>
+      <div class="pane caption2">Editable HTML Pane2</div>
+      <div class="pane caption3">Editable HTML Pane3</div>
+    </li>
+    <li>
+      <div class="slide"><img src="http://placehold.it/900x400&text=slide3"></div>
+      <div class="pane caption">Editable HTML Pane1</div>
+      <div class="pane caption2">Editable HTML Pane2</div>
+      <div class="pane caption3">Editable HTML Pane3</div>
     </li>
     <li>
       <div class="slide"><img src="http://placehold.it/900x400&text=slide4"></div>
-      <div class="pane caption">Editable HTML Panes</div>
-      <div class="pane caption2">Editable HTML Panes2</div>
-      <div class="pane caption3">Editable HTML Panes3</div>
+      <div class="pane caption">Editable HTML Pane1</div>
+      <div class="pane caption2">Editable HTML Pane2</div>
+      <div class="pane caption3">Editable HTML Pane3</div>
     </li>
     <li>
       <div class="slide"><img src="http://placehold.it/900x400&text=slide5"></div>
-      <div class="pane caption">Editable HTML Panes</div>
-      <div class="pane caption2">Editable HTML Panes2</div>
-      <div class="pane caption3">Editable HTML Panes3</div>
+      <div class="pane caption">Editable HTML Pane1</div>
+      <div class="pane caption2">Editable HTML Pane2</div>
+      <div class="pane caption3">Editable HTML Pane3</div>
     </li>
     <li>
       <div class="slide"><img src="http://placehold.it/900x400&text=slide6"></div>
-      <div class="pane caption">Editable HTML Panes</div>
-      <div class="pane caption2">Editable HTML Panes2</div>
-      <div class="pane caption3">Editable HTML Panes3</div>
+      <div class="pane caption">Editable HTML Pane1</div>
+      <div class="pane caption2">Editable HTML Pane2</div>
+      <div class="pane caption3">Editable HTML Pane3</div>
     </li>
     <li>
       <div class="slide"><img src="http://placehold.it/900x400&text=slide7"></div>
-      <div class="pane caption">Editable HTML Panes</div>
-      <div class="pane caption2">Editable HTML Panes2</div>
-      <div class="pane caption3">Editable HTML Panes3</div>
+      <div class="pane caption">Editable HTML Pane1</div>
+      <div class="pane caption2">Editable HTML Pane2</div>
+      <div class="pane caption3">Editable HTML Pane3</div>
     </li>
   </ul>
 </div>
