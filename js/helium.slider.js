@@ -119,23 +119,22 @@
 					orig.prevGate();
 				});
 				var touchStartX;
-				var touchEndX;
+				var touchMoveX;
 				$(this.element).on('touchstart', function(e){
 					touchStartX = e.originalEvent.touches[0].pageX;
-					// alert(touchStartX+" , "+touchEndX);
+					// alert(touchStartX+" , "+touchMoveX);
 				});
 				$(this.element).on('touchmove', function(e){
 
-					touchEndX = e.originalEvent.changedTouches[0].pageX;
-					alert(touchStartX+" , "+touchEndX);
-					// if( e.originalEvent.touches[0].pageX - touchStartX > 50){
-					// 	alert('nexttouch');
-					// 	orig.nextGate();
-					// }
-					// if(e.originalEvent.touches[0].pageX - touchStartX < -50){
-					// 	alert('prevtouch');
-					// 	orig.prevGate();						
-					// }
+					touchMoveX = e.originalEvent.changedTouches[0].pageX;
+					if( touchMoveX - touchStartX > 50){
+						alert('nexttouch');
+						orig.nextGate();
+					}
+					if(touchMoveX - touchStartX < -50){
+						alert('prevtouch');
+						orig.prevGate();						
+					}
 				});
 
 
