@@ -125,7 +125,7 @@
 				});
 				$(this.element).on('touchmove', function(e){
 					touchMoveX = e.originalEvent.changedTouches[0].pageX;
-					if( touchMoveX - touchStartX > 40){
+					if(touchMoveX - touchStartX > 40){
 						orig.nextGate();
 					}
 					if(touchMoveX - touchStartX < -40){
