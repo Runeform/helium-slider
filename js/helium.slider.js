@@ -120,7 +120,8 @@
 				});
 
 				$(this.element).on('touchstart', function(e){
-					alert(e.clientX);
+					var xPos = e.originalEvent.touches[0].pageX;
+					alert(xPos);
 				});
 
 
