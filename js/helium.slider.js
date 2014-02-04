@@ -126,7 +126,7 @@
 				});
 				$(this.element).on('touchend', function(e){
 
-					touchEndX = e.originalEvent.touches[0].pageX;
+					touchEndX = e.originalEvent.changedTouches[0].pageX;
 					alert(touchStartX+" , "+touchEndX);
 					// if( e.originalEvent.touches[0].pageX - touchStartX > 50){
 					// 	alert('nexttouch');
