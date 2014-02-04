@@ -119,8 +119,9 @@
 					orig.prevGate();
 				});
 
-				$(this.element).on('touchstart', function(){
-					alert('touch me')
+				$(this.element).on('touchstart', function(e){
+					var touchx = e.clientX;
+					alert(touchx);
 				});
 
 
