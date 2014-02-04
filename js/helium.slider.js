@@ -118,16 +118,18 @@
 				$(this.element).find('.prev').click( function(){
 					orig.prevGate();
 				});
-				var touchstartX;
+				var touchStartX;
+				var touchEndX;
 				$(this.element).on('touchstart', function(e){
-					touchX = e.originalEvent.touches[0].pageX;
+					touchStartX = e.originalEvent.touches[0].pageX;
 				});
 				$(this.element).on('touchend', function(e){
-					if( e.originalEvent.touches[0].pageX - touchstartX > 50){
+
+					if( e.originalEvent.touches[0].pageX - touchStartX > 50){
 						alert('nexttouch');
 						orig.nextGate();
 					}
-					if(e.originalEvent.touches[0].pageX - touchstartX < -50){
+					if(e.originalEvent.touches[0].pageX - touchStartX < -50){
 						alert('prevtouch');
 						orig.prevGate();						
 					}
