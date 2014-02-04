@@ -124,7 +124,7 @@
 					touchStartX = e.originalEvent.touches[0].pageX;
 					// alert(touchStartX+" , "+touchEndX);
 				});
-				$(this.element).on('touchend', function(e){
+				$(this.element).on('touchmove', function(e){
 
 					touchEndX = e.originalEvent.changedTouches[0].pageX;
 					alert(touchStartX+" , "+touchEndX);
