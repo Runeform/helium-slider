@@ -122,10 +122,8 @@
 				var touchMoveX;
 				$(this.element).on('touchstart', function(e){
 					touchStartX = e.originalEvent.touches[0].pageX;
-					// alert(touchStartX+" , "+touchMoveX);
 				});
 				$(this.element).on('touchmove', function(e){
-
 					touchMoveX = e.originalEvent.changedTouches[0].pageX;
 					if( touchMoveX - touchStartX > 50){
 						alert('nexttouch');
