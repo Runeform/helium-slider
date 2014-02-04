@@ -118,6 +118,11 @@
 				$(this.element).find('.prev').click( function(){
 					orig.prevGate();
 				});
+
+
+				//============================================================================
+				// custom touchswipe trigger
+				//============================================================================
 				var touchStartX;
 				var touchMoveX;
 				$(this.element).on('touchstart', function(e){
@@ -125,10 +130,10 @@
 				});
 				$(this.element).on('touchmove', function(e){
 					touchMoveX = e.originalEvent.changedTouches[0].pageX;
-					if(touchMoveX - touchStartX > 40){
+					if(touchMoveX - touchStartX < -40){
 						orig.nextGate();
 					}
-					if(touchMoveX - touchStartX < -40){
+					if(touchMoveX - touchStartX > 40){
 						orig.prevGate();						
 					}
 				});
