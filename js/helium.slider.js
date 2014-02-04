@@ -118,10 +118,19 @@
 				$(this.element).find('.prev').click( function(){
 					orig.prevGate();
 				});
-
+				var touchstartX;
 				$(this.element).on('touchstart', function(e){
-					var xPos = e.originalEvent.touches[0].pageX;
-					alert(xPos);
+					touchX = e.originalEvent.touches[0].pageX;
+				});
+				$(this.element).on('touchend', function(e){
+					if( e.originalEvent.touches[0].pageX - touchstartX > 50){
+						alert('nexttouch');
+						orig.nextGate();
+					}
+					if(e.originalEvent.touches[0].pageX - touchstartX < -50){
+						alert('prevtouch');
+						orig.prevGate();						
+					}
 				});
 
 
