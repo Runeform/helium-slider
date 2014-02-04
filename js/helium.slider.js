@@ -125,14 +125,16 @@
 				});
 				$(this.element).on('touchend', function(e){
 
-					if( e.originalEvent.touches[0].pageX - touchStartX > 50){
-						alert('nexttouch');
-						orig.nextGate();
-					}
-					if(e.originalEvent.touches[0].pageX - touchStartX < -50){
-						alert('prevtouch');
-						orig.prevGate();						
-					}
+					touchEndX = e.originalEvent.touches[0].pageX;
+					alert(touchStartX+" , "+touchEndX);
+					// if( e.originalEvent.touches[0].pageX - touchStartX > 50){
+					// 	alert('nexttouch');
+					// 	orig.nextGate();
+					// }
+					// if(e.originalEvent.touches[0].pageX - touchStartX < -50){
+					// 	alert('prevtouch');
+					// 	orig.prevGate();						
+					// }
 				});
 
 
