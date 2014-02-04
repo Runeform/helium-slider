@@ -122,6 +122,7 @@
 				var touchEndX;
 				$(this.element).on('touchstart', function(e){
 					touchStartX = e.originalEvent.touches[0].pageX;
+					alert(touchStartX+" , "+touchEndX);
 				});
 				$(this.element).on('touchend', function(e){
 
