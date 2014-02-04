@@ -120,7 +120,7 @@
 				});
 
 				$(this.element).on('touchstart', function(e){
-					var touchx = e.clientX;
+					var touchx = touch.clientX;
 					alert(touchx);
 				});
 
