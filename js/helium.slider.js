@@ -131,10 +131,12 @@
 				$(this.element).on('touchmove', function(e){
 					touchMoveX = e.originalEvent.changedTouches[0].pageX;
 					if(touchMoveX - touchStartX < -40){
-						orig.nextSlide();
+						$(this.element).find('.slide-holder.trans').removeClass('trans');
+						orig.nextGate();
 					}
 					if(touchMoveX - touchStartX > 40){
-						orig.prevSlide();						
+						$(this.element).find('.slide-holder.trans').removeClass('trans');
+						orig.prevGate();						
 					}
 				});
 
