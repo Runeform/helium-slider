@@ -131,10 +131,10 @@
 				$(this.element).on('touchmove', function(e){
 					touchMoveX = e.originalEvent.changedTouches[0].pageX;
 					if(touchMoveX - touchStartX < -40){
-						orig.nextGate();
+						orig.nextSlide();
 					}
 					if(touchMoveX - touchStartX > 40){
-						orig.prevGate();						
+						orig.prevSlide();						
 					}
 				});
 
