@@ -16,7 +16,7 @@
 
 body{
     margin:0;
-    padding: 6%;
+    padding:30px 6%;
     background-color: #efefef;
     font-family: helvetica, sans-serif;
     color:#777;
@@ -26,8 +26,8 @@ h1, h2, h3{
     margin: 0;
     padding: 0 0 15px;
     }
-h2{padding: 15px 0 15px;}
-p{margin:0 0 6px;}
+h2{ padding: 15px 0 15px;}
+p{ margin:0 0 6px;}
 textarea{
     margin:0 0 10px;
     width: 100%;
@@ -44,8 +44,11 @@ ul.features{
     margin:0;
     font-size: 14px;
     }
-ul.features li{margin-bottom: 2px;}
+ul.features li{ margin-bottom: 2px;}
 a.selector{ font-size: 12px; color:#47b; text-decoration: none; font-weight: bold; float: right;}
+a.selector:hover{color:#359;}
+.btn{ display: inline-block; padding: 5px 20px; color: #f2f2f2; background-color: #47b; text-decoration: none;  text-transform: capitalize; font-size: 15px; -webkit-font-smoothing: antialiased;}
+.btn:hover{cursor: pointer; background-color: #359;}
 
 /* ==========================================================================
    Helium Slider styles
@@ -145,6 +148,7 @@ div.helium-slider ul.slide-nav li.active{ background: #444; }
 <body style="margin:0;">
     <h1>Helium-slider</h1>
     <p>Helium-slider is a responsive jQuery image slider, built by Harun Eggleton under the open source MIT licenece.</p>
+    <a href="https://github.com/Runeform/helium-slider/releases/latest" title="" class="btn" target="_blank">download latest release</a>
     <h2>Features:</h2>
     <ul class="features">
         <li>fader/slider modes</li>
