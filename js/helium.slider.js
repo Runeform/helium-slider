@@ -59,8 +59,10 @@
 			init: function () {
 				var orig = this;
 				this.setWidth();
+				this.paneCalc();
 				$(this.element).mutate('height width', function(el,info) { 
 				orig.setWidth();
+				orig.paneCalc();
 				});
 				if(this.vars.useNav){this.initNav()}
 				if(this.vars.useNav){this.updateNav()}
@@ -74,32 +76,13 @@
 				if (this.vars.paneFade) {this.vars.paneFade = 0} else {this.vars.paneFade = 1};
 				$(this.element).find('li').find('div.pane').css('opacity',this.vars.paneFade);
 
+
+
+				//============================================================================
+				// Transition initial slide panes
+				//============================================================================
 				var i = -1;
-				while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
-				//============================================================================
-				// Pane Calc (calculates position, offsets and animation for pane element)
-				//============================================================================
-				if ($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('left') != 'auto'){ 
-					this.vars.paneL[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('left').slice(0,-2));
-				} else if($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('right') != 'auto'){ 
-					this.vars.paneXOffset[i] = this.vars.paneXOffset[i] * -1 ;
-					this.vars.paneR[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('right').slice(0,-2));
-				};
-				if ($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('top') != 'auto'){ 
-					this.vars.paneT[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('top').slice(0,-2)) ;
-				} else if($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('bottom') != 'auto'){ 
-					this.vars.paneYOffset[i] = this.vars.paneYOffset[i] * -1 ;
-					this.vars.paneB[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('bottom').slice(0,-2));
-				};
-				this.vars.paneLCalc[i] = this.vars.paneL[i] + this.vars.paneXOffset[i];
-				this.vars.paneRCalc[i] = this.vars.paneR[i] + this.vars.paneXOffset[i];
-				this.vars.paneTCalc[i] = this.vars.paneT[i] + this.vars.paneYOffset[i];
-				this.vars.paneBCalc[i] = this.vars.paneB[i] + this.vars.paneYOffset[i];
-				$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('left' , this.vars.paneL[i] + this.vars.paneXOffset[i] + 'px');
-				$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('right' , this.vars.paneR[i] + this.vars.paneXOffset[i] + 'px');
-				$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('top' , this.vars.paneT[i] + this.vars.paneYOffset[i] + 'px');
-				$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('bottom' , this.vars.paneB[i] + this.vars.paneYOffset[i] + 'px');
-				// transition initial slide
+				while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){
 				$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('left' , this.vars.paneLCalc[i]+ 'px').css('right' , this.vars.paneRCalc[i] + 'px').css('top' , this.vars.paneTCalc[i] + 'px').css('bottom' , this.vars.paneBCalc[i] + 'px').delay(this.vars.paneDelay[i]).animate({ 
 					left: this.vars.paneL[i] ,
 					right: this.vars.paneR[i] ,
@@ -156,7 +139,7 @@
 				if(this.vars.pauseOnHover){this.hoverPause()}
 
 			},
-
+	
 //============================================================================
 // setWidth function.  
 // (calculates and sets all widths, resets position.  run initially and on mutate.)
@@ -170,6 +153,33 @@
 			    if($(this.element).hasClass('loading')){
 			    	this.finishLoad();
 			    }
+			},
+
+//============================================================================
+// Pane Calc
+// (calculates pane positions and offsets. run initially and on mutate.)
+//============================================================================
+			paneCalc: function () {
+				var i = -1;
+				while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){
+					$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style');
+					if ($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('left') != 'auto'){ 
+						this.vars.paneL[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('left').slice(0,-2));
+					} else if($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('right') != 'auto'){ 
+						this.vars.paneR[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('right').slice(0,-2));
+					};
+					if ($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('top') != 'auto'){ 
+						this.vars.paneT[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('top').slice(0,-2)) ;
+					} else if($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('bottom') != 'auto'){ 
+						this.vars.paneB[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('bottom').slice(0,-2));
+					};
+					this.vars.paneLCalc[i] = this.vars.paneL[i] + this.vars.paneXOffset[i];
+					this.vars.paneRCalc[i] = this.vars.paneR[i] - this.vars.paneXOffset[i];
+					this.vars.paneTCalc[i] = this.vars.paneT[i] + this.vars.paneYOffset[i];
+					this.vars.paneBCalc[i] = this.vars.paneB[i] - this.vars.paneYOffset[i];
+
+
+				}	
 			},
 
 //============================================================================
@@ -204,7 +214,7 @@
 				$(this.element).find('.slide-nav li:nth-child('+this.vars.curr+')').addClass('active');
 			},
 			gotoSlide: function () {		
-					if(this.vars.targetSlide > this.vars.curr){
+				if(this.vars.targetSlide > this.vars.curr){
 						this.nextGate()
 				} else if(this.vars.targetSlide < this.vars.curr){
 						this.prevGate()
@@ -222,6 +232,7 @@
 				$(this.element).find('.slide-holder').addClass('trans');
 
 
+				this.paneCalc();
 				var i = -1;
 				while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
 			// animate out pane
@@ -229,7 +240,7 @@
 					left: this.vars.paneL[i] - this.vars.paneXOffset[i] ,
 					right: this.vars.paneR[i] - this.vars.paneXOffset[i] ,
 					top: this.vars.paneT[i] - this.vars.paneYOffset[i] ,
-					bottom: this.vars.paneB[i] - this.vars.paneYOffset[i] ,
+					bottom: this.vars.paneB[i] + this.vars.paneYOffset[i] ,
 					opacity: this.vars.paneFade 
 				}, this.vars.paneSpeed[i], this.vars.easing);
 				}
@@ -301,6 +312,7 @@
 				$(this.element).find('.slide-holder').addClass('trans');
 
 
+				this.paneCalc();
 				var i = -1;
 				while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
 			// animate out pane
@@ -343,7 +355,7 @@
 				var x = -1;
 				while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
 			// animate in new pane
-				$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(x).stop().css('left' , (this.vars.paneL[x] - this.vars.paneXOffset[x]) + 'px').css('right' , (this.vars.paneR[x] - this.vars.paneXOffset[x]) + 'px').css('top' , (this.vars.paneT[x] - this.vars.paneYOffset[x]) + 'px').css('bottom' , (this.vars.paneB[x] - this.vars.paneYOffset[x]) + 'px').delay(this.vars.paneDelay[x]).animate({ 
+				$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(x).stop().css('left' , (this.vars.paneL[x] - this.vars.paneXOffset[x]) + 'px').css('right' , (this.vars.paneR[x] + this.vars.paneXOffset[x]) + 'px').css('top' , (this.vars.paneT[x] - this.vars.paneYOffset[x]) + 'px').css('bottom' , (this.vars.paneB[x] + this.vars.paneYOffset[x]) + 'px').delay(this.vars.paneDelay[x]).animate({ 
 					left: this.vars.paneL[x] ,
 					right: this.vars.paneR[x] ,
 					top: this.vars.paneT[x] ,
