@@ -40,6 +40,7 @@
 		paneRCalc: ['auto'],
 		paneBCalc: ['auto'],
 		paneLCalc: ['auto'],
+		focusable: 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
 		targetSlide: false
 	};
 
@@ -84,7 +85,9 @@
 			if (this.vars.paneFade) {this.vars.paneFade = 0} else {this.vars.paneFade = 1};
 			$(this.element).find('li').find('div.pane').css('opacity',this.vars.paneFade);
 
-
+			//prevent tabbing to slides that are not displayed
+			$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
+			$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
 
 			//============================================================================
 			// Transition initial slide panes
@@ -309,6 +312,8 @@
 							}, orig.vars.autoPlay * -1) }
 						orig.vars.afterSlide();
 						if(orig.vars.stopAutoPlay === 9999){ orig.vars.stopAutoPlay = 1; }
+						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
+						$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
 			});
 		},
 
@@ -391,6 +396,8 @@
 							}, orig.vars.autoPlay * -1) }
 						orig.vars.afterSlide();
 						if(orig.vars.stopAutoPlay === 9999){ orig.vars.stopAutoPlay = 1; }
+						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
+						$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
 
 			});
 		},
