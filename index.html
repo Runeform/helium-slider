@@ -94,6 +94,7 @@ div.helium-slider .next, div.helium-slider .prev{
     top:45%;
     cursor: pointer;
     z-index: 10;
+    display:block;
     }
 div.helium-slider .next{right:10px;}
 div.helium-slider .prev{left:10px;}
@@ -161,7 +162,7 @@ div.helium-slider ul.slide-nav li.active{ background: #444; }
     </ul>
     <h2>Examples:</h2>
     <div id="slider-eg-1" class="helium-slider loading">
-        <div class="next">next</div><div class="prev">prev</div>
+        <a href="" class="next" alt="Next Slide">next</a><a href="" class="prev" alt="Previous Slide">prev</a>
         <ul class="slide-nav">
         </ul>
         <div class="slide-window">
@@ -188,7 +189,7 @@ div.helium-slider ul.slide-nav li.active{ background: #444; }
         </div>
     </div>
     <div id="slider-eg-2" class="helium-slider loading">
-        <div class="next">next</div><div class="prev">prev</div>
+        <a href="" class="next" alt="Next Slide">next</a><a href="" class="prev" alt="Previous Slide">prev</a>
         <ul class="slide-nav">
         </ul>
         <div class="slide-window">
@@ -341,7 +342,7 @@ div.helium-slider ul.slide-nav li.active{ background: #333; }</textarea>
     <h3>4: initialize</h3>
     <p>Place the follow before the end of the BODY tag to initialize your slider.  this example includes all options for initializing slider with commented descriptions</p>
     <a href="" class="selector" title="">&#8595; select all</a>
-<textarea readonly name="" style="height:290px;">
+<textarea readonly name="" style="height:300px;">
 <script type="text/javascript" charset="utf-8">
 $(function() {
     $("#your-slider-id").heliumSlider({
@@ -359,6 +360,7 @@ $(function() {
         afterSlide: function(){
         // this callback function fires after the main slide transition takes place
         } ,
+        stopAutoPlay: false ,   // stop auto play when reaching this slide: "first", "last", number of slide, or false.
         pauseOnHover: true      // pause autoplay on hover: true or false
     });
 });
