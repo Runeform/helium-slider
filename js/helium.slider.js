@@ -15,6 +15,7 @@
 		paneDelay: [1000] ,     // pane delay before animate: milliseconds
 		paneSpeed: [1500] ,     // pane speed of animate: milliseconds
 		useNav: true ,          // use navigation: true or false
+		navTemplate: "" ,       // template for contents of nav list item
 		autoPlay: 6000 ,        // auto play slides. delay between transitions: milliseconds (negative values reverse direction.  any value between -20 and 20 disables autoplay)
 		speed: 100 ,            // speed of main slide animations
 		easing: "swing" ,       // easing type: "swing" or "linear"
@@ -24,7 +25,8 @@
 			                    // this callback function fires after the main slide transition takes place
 		} ,
 		stopAutoPlay: false ,   // stop auto play when reaching this slide: "first", "last", number of slide, or false.
-		pauseOnHover: true      // pause autoplay on hover: true or false
+		pauseOnHover: true ,    // pause autoplay on hover: true or false
+		pauseOnFocus: true      // pause autoplay when any element in the slider is focused: true or false
 	},
 	priv = {
 		slideWidth: false,
@@ -150,6 +152,7 @@
 				}, (this.vars.autoPlay - this.vars.speed) * -1)}
 
 			if(this.vars.pauseOnHover){this.hoverPause()}
+			if(this.vars.pauseOnFocus){this.focusPause()}
 
 		},
 
@@ -210,11 +213,12 @@
 // (Creates nav items and populates this.vars.targetSlide var for next and prev functions)
 //============================================================================
 		initNav: function () {
+			var orig = this;
 			$(this.element).find('.slide-nav').show();
 			var g = 1;
 			$(this.element).find('.slide-nav').html(' ')
 			for (g = 1; g <= this.vars.slideCount; ++g)  {
-				$(this.element).find('.slide-nav').html($(this.element).find('.slide-nav').html() + '<li data-slide-index="'+g+'"></li>');
+				$(this.element).find('.slide-nav').html($(this.element).find('.slide-nav').html() + '<li data-slide-index="'+g+'">'+orig.vars.navTemplate+'</li>');
 			}
 		},
 		updateNav: function () {
@@ -424,9 +428,11 @@
 // hoverPause function
 //============================================================================
 		hoverPause: function () {
-			$(this.element).append('<div class="pauser"></div>');
-			var origopacity = $(this.element).find('.pauser').css('opacity');
 			var orig = this;
+			if(!($(this.element).find('.pauser').length)){
+				$(this.element).append('<div class="pauser"></div>');
+			}
+			var origopacity = $(this.element).find('.pauser').css('opacity');
 			$(this.element).find('.pauser').css('opacity',0)
 			$(this.element).find('ul.slide-holder, .pauser').mouseover(function(){
 				clearTimeout(orig.vars.autoTimer);
@@ -434,6 +440,33 @@
 				$(orig.element).find('.pauser').addClass('paused');
 			});
 			$(this.element).find('ul.slide-holder').mouseout(function(){
+				if (orig.vars.autoPlay >= 20){ orig.vars.autoTimer = setTimeout( function(){
+					orig.nextGate()
+				}, orig.vars.autoPlay + orig.vars.speed)}
+				if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
+					orig.prevGate()
+				}, (orig.vars.autoPlay - orig.vars.speed) * -1)}
+				$(orig.element).find('.pauser').stop().animate({opacity: 0}, 200);
+				$(orig.element).find('.pauser').removeClass('paused');
+			});
+		},
+
+//============================================================================
+// focusPause function
+//============================================================================
+		focusPause: function () {
+			var orig = this;
+			if(!($(this.element).find('.pauser').length)){
+				$(this.element).append('<div class="pauser"></div>');
+			}
+			var origopacity = $(this.element).find('.pauser').css('opacity');
+			$(this.element).find('.pauser').css('opacity',0)
+			$(this.element).focusin(function(){
+				clearTimeout(orig.vars.autoTimer);
+				$(orig.element).find('.pauser').stop().animate({opacity: origopacity}, 200);
+				$(orig.element).find('.pauser').addClass('paused');
+			});
+			$(this.element).focusout(function(){
 				if (orig.vars.autoPlay >= 20){ orig.vars.autoTimer = setTimeout( function(){
 					orig.nextGate()
 				}, orig.vars.autoPlay + orig.vars.speed)}

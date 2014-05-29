@@ -342,7 +342,7 @@ div.helium-slider ul.slide-nav li.active{ background: #333; }</textarea>
     <h3>4: initialize</h3>
     <p>Place the follow before the end of the BODY tag to initialize your slider.  this example includes all options for initializing slider with commented descriptions</p>
     <a href="" class="selector" title="">&#8595; select all</a>
-<textarea readonly name="" style="height:300px;">
+<textarea readonly name="" style="height:330px;">
 <script type="text/javascript" charset="utf-8">
 $(function() {
     $("#your-slider-id").heliumSlider({
@@ -352,6 +352,7 @@ $(function() {
         paneDelay: [1000] ,     // pane delay before animate: milliseconds
         paneSpeed: [1500] ,     // pane speed of animate: milliseconds
         useNav: true ,          // use navigation: true or false
+        navTemplate: "" ,       // template for contents of nav list item
         autoPlay: 6000 ,        // auto play slides. delay between transitions: milliseconds (negative values reverse direction.  any value between -20 and 20 disables autoplay)
         speed: 500 ,            // speed of main slide animation (when using fader mode, speed becomes the delay between fade in and fade out animations.)
         easing: "swing" ,       // easing type: "swing" or "linear"
@@ -361,7 +362,8 @@ $(function() {
         // this callback function fires after the main slide transition takes place
         } ,
         stopAutoPlay: false ,   // stop auto play when reaching this slide: "first", "last", number of slide, or false.
-        pauseOnHover: true      // pause autoplay on hover: true or false
+        pauseOnHover: true ,    // pause autoplay on hover: true or false
+        pauseOnFocus: true      // pause autoplay when any element in the slider is focused: true or false
     });
 });
 </script></textarea>
