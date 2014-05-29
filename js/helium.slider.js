@@ -32,6 +32,7 @@
 		slideWidth: false,
 		slideCount: false,
 		totalWidth: false,
+		pauseOpacity: false,
 		curr: 1,
 		autoTimer: 0,
 		paneT: ['auto'],
@@ -151,8 +152,7 @@
 					orig.prevGate()
 				}, (this.vars.autoPlay - this.vars.speed) * -1)}
 
-			if(this.vars.pauseOnHover){this.hoverPause()}
-			if(this.vars.pauseOnFocus){this.focusPause()}
+			this.hoverFocusPause();
 
 		},
 
@@ -425,57 +425,59 @@
 		},
 
 //============================================================================
-// hoverPause function
+// pause and resume functions
 //============================================================================
-		hoverPause: function () {
-			var orig = this;
-			if(!($(this.element).find('.pauser').length)){
-				$(this.element).append('<div class="pauser"></div>');
-			}
-			var origopacity = $(this.element).find('.pauser').css('opacity');
-			$(this.element).find('.pauser').css('opacity',0)
-			$(this.element).find('ul.slide-holder, .pauser').mouseover(function(){
-				clearTimeout(orig.vars.autoTimer);
-				$(orig.element).find('.pauser').stop().animate({opacity: origopacity}, 200);
-				$(orig.element).find('.pauser').addClass('paused');
-			});
-			$(this.element).find('ul.slide-holder').mouseout(function(){
-				if (orig.vars.autoPlay >= 20){ orig.vars.autoTimer = setTimeout( function(){
-					orig.nextGate()
-				}, orig.vars.autoPlay + orig.vars.speed)}
-				if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
-					orig.prevGate()
-				}, (orig.vars.autoPlay - orig.vars.speed) * -1)}
-				$(orig.element).find('.pauser').stop().animate({opacity: 0}, 200);
-				$(orig.element).find('.pauser').removeClass('paused');
-			});
+		pauseAutoPlay: function (orig) {			
+			clearTimeout(orig.vars.autoTimer);
+			$(orig.element).find('.pauser').stop().animate({opacity: orig.vars.pauseOpacity}, 200);
+			$(orig.element).find('.pauser').addClass('paused');
+		},
+
+		resumeAutoPlay: function (orig) {
+			if (orig.vars.autoPlay >= 20){ orig.vars.autoTimer = setTimeout( function(){
+				orig.nextGate()
+			}, orig.vars.autoPlay + orig.vars.speed)}
+			if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
+				orig.prevGate()
+			}, (orig.vars.autoPlay - orig.vars.speed) * -1)}
+			$(orig.element).find('.pauser').stop().animate({opacity: 0}, 200);
+			$(orig.element).find('.pauser').removeClass('paused');
 		},
 
 //============================================================================
-// focusPause function
+// hoverFocusPause function
 //============================================================================
-		focusPause: function () {
+		hoverFocusPause: function () {
 			var orig = this;
-			if(!($(this.element).find('.pauser').length)){
-				$(this.element).append('<div class="pauser"></div>');
+			if(!($(this.element).find('.pauser').length) && (this.vars.pauseOnFocus || this.vars.pauseOnHover)){
+				$(orig.element).append('<div class="pauser"></div>');
+				orig.vars.pauseOpacity = $(orig.element).find('.pauser').css('opacity');
+				$(orig.element).find('.pauser').css('opacity',0);
 			}
-			var origopacity = $(this.element).find('.pauser').css('opacity');
-			$(this.element).find('.pauser').css('opacity',0)
-			$(this.element).focusin(function(){
-				clearTimeout(orig.vars.autoTimer);
-				$(orig.element).find('.pauser').stop().animate({opacity: origopacity}, 200);
-				$(orig.element).find('.pauser').addClass('paused');
-			});
-			$(this.element).focusout(function(){
-				if (orig.vars.autoPlay >= 20){ orig.vars.autoTimer = setTimeout( function(){
-					orig.nextGate()
-				}, orig.vars.autoPlay + orig.vars.speed)}
-				if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
-					orig.prevGate()
-				}, (orig.vars.autoPlay - orig.vars.speed) * -1)}
-				$(orig.element).find('.pauser').stop().animate({opacity: 0}, 200);
-				$(orig.element).find('.pauser').removeClass('paused');
-			});
+			if(this.vars.pauseOnHover){
+				$(orig.element).find('ul.slide-holder, .pauser').mouseover(function(event){
+					orig.pauseAutoPlay(orig);
+					event.stopPropagation();
+				});
+				$(orig.element).find('ul.slide-holder').mouseout(function(event){
+					if(!orig.vars.pauseOnFocus || !($(orig.element).find('*:focus').length)){
+						orig.resumeAutoPlay(orig)
+					}
+					event.stopPropagation();					
+				});
+			}
+			if(this.vars.pauseOnFocus){
+				$(orig.element).focusin(function(event){
+					orig.pauseAutoPlay(orig);
+					event.stopPropagation();
+				});
+				$(orig.element).focusout(function(event){
+					if(!orig.vars.pauseOnHover || !($(orig.element).find('*:hover').length)){
+						orig.resumeAutoPlay(orig)
+					}
+					event.stopPropagation();					
+				});
+			}
 		}
 	};
 
