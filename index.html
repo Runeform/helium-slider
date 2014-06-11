@@ -110,19 +110,52 @@ div.helium-slider ul.slide-holder li .caption3{
     left: 50%;
     top: 20px;
     }
-div.helium-slider div.pauser{
+div.helium-slider .pauser{
+    display: inline-block;
     position: absolute;
-    left: 50%;
-    top:50%;
-    border-right: 15px solid #fff;
-    border-left: 15px solid #fff;
-    width : 12px;
-    height: 60px;
-    margin-left: -21px;
-    margin-top: -30px;
+    right: 22px;
+    top:22px;
+    border-right: 9px solid #fff;
+    border-left: 9px solid #fff;
+    width: 8px;
+    height: 24px;
+    margin-right: -14px;
+    margin-top: -14px;
     z-index: 11;
-    opacity: 0.5;
+    opacity: 0;
+    text-indent: -9999px;
     }
+div.helium-slider .pauser.paused{
+    opacity: 1;
+    }
+div.helium-slider .controls.on .player:hover, div.helium-slider .controls.on .pauser:hover{
+    opacity: 0.85;
+    }
+div.helium-slider .controls.on{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding:12px 18px;
+    background: black;
+    background: rgba(0,0,0,0.2);
+    z-index: 11;
+}
+div.helium-slider .controls.on .pauser{
+    position: static;
+    margin:0 14px 0 0;
+    opacity: 0.7
+}
+div.helium-slider .controls.on .player{
+    display: inline-block;
+    text-indent: -9999px;
+    height:0;
+    width:0;
+    border-top: 12px solid transparent;
+    border-right: none;
+    border-bottom: 12px solid transparent;
+    border-left: 20px solid white;
+    opacity: 0.7;
+}
 div.helium-slider ul.slide-nav{
     text-align: center;
     list-style-type: none;
@@ -410,7 +443,7 @@ $(function() {
         mainFadeOut: false ,
         speed: 700,
         autoPlay: 4000,
-        pauseOnHover: false,
+        pauseButton: true,
         easing: 'linear'
     });
     $("#slider-eg-2").heliumSlider({

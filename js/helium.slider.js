@@ -25,14 +25,14 @@
 			                    // this callback function fires after the main slide transition takes place
 		} ,
 		stopAutoPlay: false ,   // stop auto play when reaching this slide: "first", "last", number of slide, or false.
-		pauseOnHover: true ,    // pause autoplay on hover: true or false
-		pauseOnFocus: true      // pause autoplay when any element in the slider is focused: true or false
+		pauseOnHover: false ,   // pause autoplay on hover: true or false
+		pauseButton: false ,    // pause autoplay on hover: true or false
+		pauseOnFocus: false     // pause autoplay when any element in the slider is focused: true or false
 	},
 	priv = {
 		slideWidth: false,
 		slideCount: false,
 		totalWidth: false,
-		pauseOpacity: false,
 		curr: 1,
 		autoTimer: 0,
 		paneT: ['auto'],
@@ -152,7 +152,7 @@
 					orig.prevGate()
 				}, (this.vars.autoPlay - this.vars.speed) * -1)}
 
-			this.hoverFocusPause();
+			this.initPause();
 
 		},
 
@@ -244,6 +244,7 @@
 //============================================================================
 
 		nextSlide: function () {		
+			var orig = this;
 		// add .trans class to mark start of animation
 			$(this.element).find('.slide-holder').addClass('trans');
 
@@ -261,7 +262,6 @@
 			}, this.vars.paneSpeed[i], this.vars.easing);
 			}
 
-			var orig = this;
 		// animate slide and apply loop styles if necessary.  added fade animations
 			if(this.vars.targetSlide && this.vars.mainFadeIn && this.vars.mainFadeOut){		
 				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
@@ -306,12 +306,12 @@
 		// remove .trans class and reset timer when animation is complete
 			$(this.element).find('.slide-holder.trans').promise().done(function(){
 						$(orig.element).find('.slide-holder').removeClass('trans');
-						if (orig.vars.autoPlay >= 20 && !($(this.element).find('.pauser.paused').length) && orig.vars.curr != orig.vars.stopAutoPlay){ 
+						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.stopAutoPlay){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.nextGate();
 							}, orig.vars.autoPlay);
 						}
-						if (orig.vars.autoPlay <= -20 && !($(this.element).find('.pauser.paused').length) && orig.vars.curr != orig.vars.stopAutoPlay){ 
+						if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.stopAutoPlay){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.prevGate();
 							}, orig.vars.autoPlay * -1) }
@@ -320,7 +320,7 @@
 							orig.vars.autoPlay = 0; 
 							orig.vars.pauseOnHover = false;
 							orig.vars.pauseOnFocus = false;
-							$(orig.element).find('.pauser').remove();
+							$(orig.element).find('.pauser, .controls').remove();
 						}
 						if(orig.vars.stopAutoPlay === 9999){ orig.vars.stopAutoPlay = 1; }
 						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
@@ -396,12 +396,12 @@
 		// remove .trans class and reset timer when animation is complete
 			$(this.element).find('.slide-holder.trans').promise().done(function(){
 						$(orig.element).find('.slide-holder').removeClass('trans');
-						if (orig.vars.autoPlay >= 20 && !($(this.element).find('.pauser.paused').length) && orig.vars.curr != orig.vars.stopAutoPlay){ 
+						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.stopAutoPlay){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.nextGate();
 							}, orig.vars.autoPlay);
 						}
-						if (orig.vars.autoPlay <= -20 && !($(this.element).find('.pauser.paused').length) && orig.vars.curr != orig.vars.stopAutoPlay){ 
+						if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.stopAutoPlay){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.prevGate();
 							}, orig.vars.autoPlay * -1) }
@@ -410,7 +410,7 @@
 							orig.vars.autoPlay = 0; 
 							orig.vars.pauseOnHover = false;
 							orig.vars.pauseOnFocus = false;
-							$(orig.element).find('.pauser').remove();
+							$(orig.element).find('.pauser, .controls').remove();
 						}
 						if(orig.vars.stopAutoPlay === 9999){ orig.vars.stopAutoPlay = 1; }
 						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
@@ -442,7 +442,6 @@
 //============================================================================
 		pauseAutoPlay: function (orig) {			
 			clearTimeout(orig.vars.autoTimer);
-			$(orig.element).find('.pauser').stop().animate({opacity: orig.vars.pauseOpacity}, 200);
 			$(orig.element).find('.pauser').addClass('paused');
 		},
 
@@ -453,19 +452,19 @@
 			if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
 				orig.prevGate()
 			}, (orig.vars.autoPlay - orig.vars.speed) * -1)}
-			$(orig.element).find('.pauser').stop().animate({opacity: 0}, 200);
 			$(orig.element).find('.pauser').removeClass('paused');
 		},
 
 //============================================================================
 // hoverFocusPause function
 //============================================================================
-		hoverFocusPause: function () {
+		initPause: function () {
 			var orig = this;
-			if(!($(this.element).find('.pauser').length) && (this.vars.pauseOnFocus || this.vars.pauseOnHover)){
-				$(orig.element).append('<div class="pauser"></div>');
-				orig.vars.pauseOpacity = $(orig.element).find('.pauser').css('opacity');
-				$(orig.element).find('.pauser').css('opacity',0);
+			if(!($(this.element).find('.pauser').length) && (this.vars.pauseOnFocus || this.vars.pauseOnHover || this.vars.pauseButton)){
+				$(orig.element).append('<div class="controls"><a href="" class="pauser">Pause</a></div>');
+				if(orig.vars.pauseButton){
+					$(orig.element).find('.controls').addClass('on').append('<a href="" class="player">Play</a>');
+				}
 			}
 			if(this.vars.pauseOnHover){
 				$(orig.element).find('ul.slide-holder, .pauser').mouseover(function(event){
@@ -473,7 +472,7 @@
 					event.stopPropagation();
 				});
 				$(orig.element).find('ul.slide-holder').mouseout(function(event){
-					if(!orig.vars.pauseOnFocus || !($(orig.element).find('*:focus').length)){
+					if((!orig.vars.pauseOnFocus || !$(orig.element).find('*:focus').length) && !$(orig.element).find('.pauser.clicked').length){
 						orig.resumeAutoPlay(orig)
 					}
 					event.stopPropagation();					
@@ -485,10 +484,24 @@
 					event.stopPropagation();
 				});
 				$(orig.element).focusout(function(event){
-					if(!orig.vars.pauseOnHover || !($(orig.element).find('*:hover').length)){
+					if((!orig.vars.pauseOnHover || !$(orig.element).find('*:hover').length) && !$(orig.element).find('.pauser.clicked').length){
 						orig.resumeAutoPlay(orig)
 					}
 					event.stopPropagation();					
+				});
+			}
+			if(this.vars.pauseButton){
+				$(orig.element).find('.pauser').click(function(event){
+					$(this).addClass('clicked');
+					orig.pauseAutoPlay(orig);
+					return false;
+					// event.stopPropagation();
+				});
+				$(orig.element).find('.player').click(function(event){
+					$(orig.element).find('.pauser').removeClass('clicked');
+					orig.resumeAutoPlay(orig)
+					return false;
+					// event.stopPropagation();					
 				});
 			}
 		}
