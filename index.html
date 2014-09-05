@@ -126,12 +126,13 @@ div.helium-slider .pauser{
     text-indent: -9999px;
     vertical-align:top;
     }
-div.helium-slider .pauser.paused{
-    opacity: 1;
-    }
 div.helium-slider .controls.on .player:hover, div.helium-slider .controls.on .pauser:hover{
     opacity: 0.85;
     }
+div.helium-slider .pauser.paused{
+    opacity: 1 !important;
+    }
+
 div.helium-slider .controls.on{
     position: absolute;
     top: 0;
@@ -479,9 +480,13 @@ $(function() {
         paneSpeed: [500,500,500] ,
         mainFadeIn: false ,
         mainFadeOut: false ,
-        speed: 700,
+        speed: 2000,
         autoPlay: 4000,
         pauseButton: true,
+        stopAutoPlay: false,
+        pauseOnAutoStop: false,
+        pauseOnHover: true,
+        pauseOnFocus: true,
         easing: 'linear'
     });
     $("#slider-eg-2").heliumSlider({

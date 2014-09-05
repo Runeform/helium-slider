@@ -25,6 +25,7 @@
 			                    // this callback function fires after the main slide transition takes place
 		} ,
 		stopAutoPlay: false ,   // stop auto play when reaching this slide: "first", "last", number of slide, or false.
+		pauseOnAutoStop: false, // When the auto play completes, pause the auto play and keep controls available. -MG 8/21/14
 		pauseOnHover: false ,   // pause autoplay on hover: true or false
 		pauseButton: false ,    // pause autoplay on hover: true or false
 		pauseOnFocus: false     // pause autoplay when any element in the slider is focused: true or false
@@ -218,7 +219,7 @@
 			var g = 1;
 			$(this.element).find('.slide-nav').html(' ')
 			for (g = 1; g <= this.vars.slideCount; ++g)  {
-				$(this.element).find('.slide-nav').html($(this.element).find('.slide-nav').html() + '<li data-slide-index="'+g+'">'+orig.vars.navTemplate+'<div class="access">Slide '+g+'</div></li>');
+				$(this.element).find('.slide-nav').html($(this.element).find('.slide-nav').html() + ' <li data-slide-index="'+g+'">'+orig.vars.navTemplate+'<div class="access">Slide '+g+'</div></li>');
 			}
 		},
 		updateNav: function () {
@@ -317,10 +318,15 @@
 							}, orig.vars.autoPlay * -1) }
 						orig.vars.afterSlide();
 						if(orig.vars.curr == orig.vars.stopAutoPlay){
-							orig.vars.autoPlay = 0; 
-							orig.vars.pauseOnHover = false;
-							orig.vars.pauseOnFocus = false;
-							$(orig.element).find('.pauser, .controls').remove();
+							if (orig.vars.pauseOnAutoStop == true){
+								orig.stopAutoPlay(orig);
+							}
+							else{
+								orig.vars.autoPlay = 0;
+								orig.vars.pauseOnHover = false;
+								orig.vars.pauseOnFocus = false;
+								$(orig.element).find('.pauser, .controls').remove();
+							}
 						}
 						if(orig.vars.stopAutoPlay === 9999){ orig.vars.stopAutoPlay = 1; }
 						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
@@ -407,10 +413,15 @@
 							}, orig.vars.autoPlay * -1) }
 						orig.vars.afterSlide();
 						if(orig.vars.curr == orig.vars.stopAutoPlay){
-							orig.vars.autoPlay = 0; 
-							orig.vars.pauseOnHover = false;
-							orig.vars.pauseOnFocus = false;
-							$(orig.element).find('.pauser, .controls').remove();
+							if (orig.vars.pauseOnAutoStop == true){
+								orig.stopAutoPlay(orig);
+							}
+							else{
+								orig.vars.autoPlay = 0;
+								orig.vars.pauseOnHover = false;
+								orig.vars.pauseOnFocus = false;
+								$(orig.element).find('.pauser, .controls').remove();
+							}
 						}
 						if(orig.vars.stopAutoPlay === 9999){ orig.vars.stopAutoPlay = 1; }
 						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
@@ -445,15 +456,23 @@
 			$(orig.element).find('.pauser').addClass('paused');
 		},
 
-		resumeAutoPlay: function (orig) {
-			if (orig.vars.autoPlay >= 20){ orig.vars.autoTimer = setTimeout( function(){
-				orig.nextGate()
-			}, orig.vars.autoPlay + orig.vars.speed)}
-			if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
-				orig.prevGate()
-			}, (orig.vars.autoPlay - orig.vars.speed) * -1)}
-			$(orig.element).find('.pauser').removeClass('paused');
+		stopAutoPlay: function (orig) {			
+			clearTimeout(orig.vars.autoTimer);
+			$(orig.element).find('.pauser').addClass('paused stopped');
 		},
+
+		resumeAutoPlay: function (orig, speed) {
+			if(!$(orig.element).find('.stopped').length){
+				if (orig.vars.autoPlay >= 20){ orig.vars.autoTimer = setTimeout( function(){
+					orig.nextGate()
+				}, speed)}
+				if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
+					orig.prevGate()
+				}, speed)}
+				$(orig.element).find('.pauser').removeClass('paused');
+			}
+		},
+
 
 //============================================================================
 // hoverFocusPause function
@@ -472,8 +491,8 @@
 					event.stopPropagation();
 				});
 				$(orig.element).find('ul.slide-holder').mouseout(function(event){
-					if((!orig.vars.pauseOnFocus || !$(orig.element).find('*:focus').length) && !$(orig.element).find('.pauser.clicked').length){
-						orig.resumeAutoPlay(orig)
+					if((!orig.vars.pauseOnFocus || !$(orig.element).find('*:focus').length) && !$(orig.element).find('.pauser.stopped').length){
+						orig.resumeAutoPlay(orig, orig.vars.autoPlay)
 					}
 					event.stopPropagation();					
 				});
@@ -484,24 +503,23 @@
 					event.stopPropagation();
 				});
 				$(orig.element).focusout(function(event){
-					if((!orig.vars.pauseOnHover || !$(orig.element).find('*:hover').length) && !$(orig.element).find('.pauser.clicked').length){
-						orig.resumeAutoPlay(orig)
+					if((!orig.vars.pauseOnHover || !$(orig.element).find('*:hover').length) && !$(orig.element).find('.pauser.stopped').length){
+						orig.resumeAutoPlay(orig, orig.vars.autoPlay)
 					}
 					event.stopPropagation();					
 				});
 			}
 			if(this.vars.pauseButton){
 				$(orig.element).find('.pauser').click(function(event){
-					$(this).addClass('clicked');
-					orig.pauseAutoPlay(orig);
-					return false;
-					// event.stopPropagation();
+					orig.stopAutoPlay(orig);
+					return false;;
 				});
 				$(orig.element).find('.player').click(function(event){
-					$(orig.element).find('.pauser').removeClass('clicked');
-					orig.resumeAutoPlay(orig)
-					return false;
-					// event.stopPropagation();					
+					if($(orig.element).find('.stopped').length){
+						$(orig.element).find('.pauser').removeClass('stopped');
+							orig.resumeAutoPlay(orig, 100);
+						}
+					return false;				
 				});
 			}
 		}
