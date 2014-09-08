@@ -41,10 +41,14 @@
 		paneR: ['auto'],
 		paneB: ['auto'],
 		paneL: ['auto'],
-		paneTCalc: ['auto'],
-		paneRCalc: ['auto'],
-		paneBCalc: ['auto'],
-		paneLCalc: ['auto'],
+		paneTPost: ['auto'],
+		paneRPost: ['auto'],
+		paneBPost: ['auto'],
+		paneLPost: ['auto'],
+		paneTPre: ['auto'],
+		paneRPre: ['auto'],
+		paneBPre: ['auto'],
+		paneLPre: ['auto'],
 		focusable: 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
 		targetSlide: false
 	};
@@ -99,7 +103,7 @@
 			//============================================================================
 			var i = -1;
 			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){
-			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('left' , this.vars.paneLCalc[i]+ 'px').css('right' , this.vars.paneRCalc[i] + 'px').css('top' , this.vars.paneTCalc[i] + 'px').css('bottom' , this.vars.paneBCalc[i] + 'px').delay(this.vars.paneDelay[i]).animate({ 
+			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).css('left' , this.vars.paneLPost[i]+ 'px').css('right' , this.vars.paneRPost[i] + 'px').css('top' , this.vars.paneTPost[i] + 'px').css('bottom' , this.vars.paneBPost[i] + 'px').delay(this.vars.paneDelay[i]).animate({ 
 				left: this.vars.paneL[i] ,
 				right: this.vars.paneR[i] ,
 				top: this.vars.paneT[i] ,
@@ -193,10 +197,14 @@
 				} else if($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('bottom') != 'auto'){ 
 					this.vars.paneB[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).removeAttr('style').css('bottom').slice(0,-2));
 				};
-				this.vars.paneLCalc[i] = this.vars.paneL[i] + this.vars.paneXOffset[i];
-				this.vars.paneRCalc[i] = this.vars.paneR[i] - this.vars.paneXOffset[i];
-				this.vars.paneTCalc[i] = this.vars.paneT[i] + this.vars.paneYOffset[i];
-				this.vars.paneBCalc[i] = this.vars.paneB[i] - this.vars.paneYOffset[i];
+				this.vars.paneLPost[i] = this.vars.paneL[i] + this.vars.paneXOffset[i];
+				this.vars.paneRPost[i] = this.vars.paneR[i] - this.vars.paneXOffset[i];
+				this.vars.paneTPost[i] = this.vars.paneT[i] + this.vars.paneYOffset[i];
+				this.vars.paneBPost[i] = this.vars.paneB[i] - this.vars.paneYOffset[i];
+				this.vars.paneLPre[i] = this.vars.paneL[i] - this.vars.paneXOffset[i];
+				this.vars.paneRPre[i] = this.vars.paneR[i] - this.vars.paneXOffset[i];
+				this.vars.paneTPre[i] = this.vars.paneT[i] - this.vars.paneYOffset[i];
+				this.vars.paneBPre[i] = this.vars.paneB[i] + this.vars.paneYOffset[i];
 			}	
 		},
 
@@ -234,13 +242,127 @@
 
 		},
 		gotoSlide: function () {		
-			if(this.vars.targetSlide > this.vars.curr){
-					this.nextGate()
-			} else if(this.vars.targetSlide < this.vars.curr){
-					this.prevGate()
+			if(this.vars.targetSlide = this.vars.curr){
+				this.vars.targetSlide = false;	
 			} else {
-				this.vars.targetSlide = false;				
+				this.changeSlide();
 			}
+		},
+
+//============================================================================
+// Next Slide Function (animate all elements. update "this.vars.curr". loop on last slide.)
+//============================================================================
+
+		changeSlide: function () {		
+			var orig = this;
+		// add .trans class to mark start of animation
+			$(this.element).find('.slide-holder').addClass('trans');
+
+
+			this.paneCalc();
+
+			if(orig.vars.targetSlide > orig.vars.curr){
+				var paneLOut = orig.vars.paneLPre;
+				var paneROut = orig.vars.paneRPre;
+				var paneTOut = orig.vars.paneTPre;
+				var paneBOut = orig.vars.paneBPre;
+				var paneLIn = orig.vars.paneLPost;
+				var paneRIn = orig.vars.paneRPost;
+				var paneTIn = orig.vars.paneTPost;
+				var paneBIn = orig.vars.paneBPost;
+			} else {				
+				var paneLOut = orig.vars.paneLPost;
+				var paneROut = orig.vars.paneRPost;
+				var paneTOut = orig.vars.paneTPost;
+				var paneBOut = orig.vars.paneBPost;
+				var paneLIn = orig.vars.paneLPre;
+				var paneRIn = orig.vars.paneRPre;
+				var paneTIn = orig.vars.paneTPre;
+				var paneBIn = orig.vars.paneBPre;
+			}
+			var i = -1;
+			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
+		// animate out pane
+			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).stop().css('left' , this.vars.paneL[i] + 'px').css('right' , this.vars.paneR[i] + 'px').css('top' , this.vars.paneT[i] + 'px').css('bottom' , this.vars.paneB[i] + 'px').animate({ 
+				left: paneLOut[i] ,
+				right: paneROut[i] ,
+				top: paneTOut[i] ,
+				bottom: paneBOut[i] ,
+				opacity: this.vars.paneFade 
+			}, this.vars.paneSpeed[i], this.vars.easing);
+			}
+
+		// animate slide and apply loop styles if necessary.  added fade animations
+			if(this.vars.mainFadeIn && this.vars.mainFadeOut){		
+				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
+				this.vars.curr = this.vars.targetSlide;
+			} else if(this.vars.curr < this.vars.slideCount && this.vars.mainFadeIn && this.vars.mainFadeOut){
+				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 - this.vars.slideWidth }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
+				this.vars.curr++;
+			} else if(this.vars.curr >= this.vars.slideCount && this.vars.mainFadeIn && this.vars.mainFadeOut){
+				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: 0 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
+				this.vars.curr = 1;
+			} else if(this.vars.targetSlide){	
+				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed);
+				this.vars.curr = this.vars.targetSlide;
+			} else if(this.vars.curr < this.vars.slideCount){
+				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 - this.vars.slideWidth }, this.vars.speed);
+				this.vars.curr++;
+			} else if(this.vars.curr >= this.vars.slideCount){
+				$(this.element).find('.slide-holder').find('li:first-child').addClass('loop').css('right','-'+this.vars.slideWidth+'px');
+				$(this.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left',this.vars.slideWidth+'px');
+				$(this.element).find('.slide-holder').stop().animate({ left: '-=' + this.vars.slideWidth }, this.vars.speed, function(){
+					$(orig.element).find('.slide-holder').find('li:first-child').removeClass('loop').css('right','auto');
+					$(orig.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left','0px');
+					$(orig.element).find('.slide-holder').css('left', '0px');
+				});
+				this.vars.curr = 1;
+			} 
+
+		// animate in new pane
+		var x = -1;
+		while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
+			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(x).stop().css('left' , paneLIn[x] + 'px').css('right' , paneRIn[x] + 'px').css('top' , paneTIn[x] + 'px').css('bottom' , paneBIn[x] + 'px').delay(this.vars.paneDelay[x]).animate({ 
+				left: this.vars.paneL[x] ,
+				right: this.vars.paneR[x] ,
+				top: this.vars.paneT[x] ,
+				bottom: this.vars.paneB[x] ,
+				opacity: 1 
+			}, this.vars.paneSpeed[x], this.vars.easing);
+		}
+
+			this.vars.targetSlide = false;
+			if(this.vars.useNav){this.updateNav()}
+		// remove .trans class and reset timer when animation is complete
+			$(this.element).find('.slide-holder.trans').promise().done(function(){
+						$(orig.element).find('.slide-holder').removeClass('trans');
+						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
+							orig.vars.autoTimer = setTimeout(function(){
+								orig.vars.autoPlayCount++;
+								orig.nextGate();
+							}, orig.vars.autoPlay);
+						}
+						if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
+							orig.vars.autoTimer = setTimeout(function(){
+								orig.vars.autoPlayCount++;
+								orig.prevGate();
+							}, orig.vars.autoPlay * -1) }
+						orig.vars.afterSlide();
+						if(orig.vars.autoPlayCount == orig.vars.autoStop){
+							if (orig.vars.pauseOnAutoStop == true){
+								orig.autoStop(orig);
+							}
+							else{
+								orig.vars.autoPlay = 0;
+								orig.vars.pauseOnHover = false;
+								orig.vars.pauseOnFocus = false;
+								$(orig.element).find('.pauser, .controls').remove();
+							}
+						}
+						if(orig.vars.autoStop === 9999){ orig.vars.autoStop = 1; }
+						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
+						$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
+			});
 		},
 
 //============================================================================
@@ -296,7 +418,7 @@
 		// animate in new pane
 		var x = -1;
 		while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
-			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(x).stop().css('left' , this.vars.paneLCalc[x] + 'px').css('right' , this.vars.paneRCalc[x] + 'px').css('top' , this.vars.paneTCalc[x] + 'px').css('bottom' , this.vars.paneBCalc[x] + 'px').delay(this.vars.paneDelay[x]).animate({ 
+			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(x).stop().css('left' , this.vars.paneLPost[x] + 'px').css('right' , this.vars.paneRPost[x] + 'px').css('top' , this.vars.paneTPost[x] + 'px').css('bottom' , this.vars.paneBPost[x] + 'px').delay(this.vars.paneDelay[x]).animate({ 
 				left: this.vars.paneL[x] ,
 				right: this.vars.paneR[x] ,
 				top: this.vars.paneT[x] ,
@@ -353,10 +475,10 @@
 			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
 		// animate out pane
 			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).stop().css('left' , this.vars.paneL[i] + 'px').css('right' , this.vars.paneR[i] + 'px').css('top' , this.vars.paneT[i] + 'px').css('bottom' , this.vars.paneB[i] + 'px').animate({ 
-				left: this.vars.paneLCalc[i] ,
-				right: this.vars.paneRCalc[i] ,
-				top: this.vars.paneTCalc[i] ,
-				bottom: this.vars.paneBCalc[i] ,
+				left: this.vars.paneLPost[i] ,
+				right: this.vars.paneRPost[i] ,
+				top: this.vars.paneTPost[i] ,
+				bottom: this.vars.paneBPost[i] ,
 				opacity: this.vars.paneFade 
 			}, this.vars.paneSpeed[i], this.vars.easing);
 		}
