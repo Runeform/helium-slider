@@ -429,16 +429,18 @@ $(function() {
         useNav: true ,          // use navigation: true or false
         navTemplate: "" ,       // template for contents of nav list item
         autoPlay: 6000 ,        // auto play slides. delay between transitions: milliseconds (negative values reverse direction.  any value between -20 and 20 disables autoplay)
-        speed: 500 ,            // speed of main slide animation (when using fader mode, speed becomes the delay between fade in and fade out animations.)
+        speed: 100 ,            // speed of main slide animations
         easing: "swing" ,       // easing type: "swing" or "linear"
-        mainFadeIn: false ,     // fade new slide in speed: milliseconds or false (mainFadeOut must be set)
-        mainFadeOut: false ,    // fade old slide out speed: milliseconds or false (mainFadeIn must be set)
+        mainFadeIn: 500 ,       // fade new slide in speed: milliseconds
+        mainFadeOut: 500 ,      // fade old slide out speed: milliseconds
         afterSlide: function(){
-        // this callback function fires after the main slide transition takes place
+                                // this callback function fires after the main slide transition takes place
         } ,
-        stopAutoPlay: false ,   // stop auto play when reaching this slide: "first", "last", number of slide, or false.
-        pauseOnHover: false ,    // pause autoplay on hover: true or false
-        pauseOnFocus: false      // pause autoplay when any element in the slider is focused: true or false
+        autoStop: false ,       // stop auto play after this number of transitions: number or false
+        pauseOnAutoStop: false, // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions: true or false -MG 8/21/14
+        pauseOnHover: false ,   // pause autoplay on hover: true or false
+        pauseButton: false ,    // pause autoplay on hover: true or false
+        pauseOnFocus: false     // pause autoplay when any element in the slider is focused: true or false
     });
 });
 </script></textarea>
@@ -458,7 +460,6 @@ $(function() {
 <script type="text/javascript" charset="utf-8">
 $(function() {
     $("#your-slider-id").heliumSlider({
-        paneFade: true ,              // pane fade in: true or false
         paneXOffset: [100,200,300] ,  // pane animate X offset: pixel value
         paneYOffset: [100,200,300] ,  // pane animate Y offset: pixel value
         paneDelay: [100,200,300] ,    // pane delay before animate: milliseconds
@@ -480,13 +481,13 @@ $(function() {
         paneSpeed: [500,500,500] ,
         mainFadeIn: false ,
         mainFadeOut: false ,
-        speed: 2000,
-        autoPlay: 4000,
+        speed: 500,
+        autoPlay: 2000,
         pauseButton: true,
-        stopAutoPlay: false,
+        autoStop: false,
         pauseOnAutoStop: false,
-        pauseOnHover: true,
-        pauseOnFocus: true,
+        pauseOnHover: false,
+        pauseOnFocus: false,
         easing: 'linear'
     });
     $("#slider-eg-2").heliumSlider({
