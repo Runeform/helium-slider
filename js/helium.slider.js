@@ -78,15 +78,9 @@
 			if(this.vars.useNav){this.initNav()}
 			if(this.vars.useNav){this.updateNav()}
 			$(this.element).find('ul.slide-nav').find('li').click(function(){
-				orig.vars.targetSlide = $(this).attr('data-slide-index');
-				orig.gotoSlide();
+				orig.goToSlide($(this).attr('data-slide-index'));
 			});
 
-			//============================================================================
-			// Stop Autoplay (Set string values of autoStop to number values)
-			//============================================================================
-			if(this.vars.autoStop === "first"){ orig.vars.autoStop = 9999;	}
-			if(this.vars.autoStop === "last"){ orig.vars.autoStop = orig.vars.slideCount; }
 
 			//============================================================================
 			// Fade (Set fade variables and initial opacity)
@@ -116,11 +110,11 @@
 			// Next and Previous button triggers
 			//============================================================================
 			$(this.element).find('.next').click( function(){
-				orig.nextGate();
+				orig.nextSlide();
 				return false;
 			});
 			$(this.element).find('.prev').click( function(){
-				orig.prevGate();
+				orig.prevSlide();
 				return false;
 			});
 
@@ -137,11 +131,11 @@
 				touchMoveX = e.originalEvent.changedTouches[0].pageX;
 				if(touchMoveX - touchStartX < -40){
 					$(this.element).find('.slide-holder.trans').removeClass('trans');
-					orig.nextGate();
+					orig.nextSlide();
 				}
 				if(touchMoveX - touchStartX > 40){
 					$(this.element).find('.slide-holder.trans').removeClass('trans');
-					orig.prevGate();						
+					orig.prevSlide();						
 				}
 			});
 
@@ -153,11 +147,11 @@
 			//============================================================================
 			if (this.vars.autoPlay >= 20){ this.vars.autoTimer = setTimeout( function(){
 					orig.vars.autoPlayCount++;
-					orig.nextGate()
+					orig.nextSlide()
 				}, this.vars.autoPlay + this.vars.speed)}
 			if (this.vars.autoPlay <= -20){ this.vars.autoTimer = setTimeout( function(){
 					orig.vars.autoPlayCount++;
-					orig.prevGate()
+					orig.prevSlide()
 				}, (this.vars.autoPlay - this.vars.speed) * -1)}
 
 			this.initPause();
@@ -202,7 +196,7 @@
 				this.vars.paneTPost[i] = this.vars.paneT[i] + this.vars.paneYOffset[i];
 				this.vars.paneBPost[i] = this.vars.paneB[i] - this.vars.paneYOffset[i];
 				this.vars.paneLPre[i] = this.vars.paneL[i] - this.vars.paneXOffset[i];
-				this.vars.paneRPre[i] = this.vars.paneR[i] - this.vars.paneXOffset[i];
+				this.vars.paneRPre[i] = this.vars.paneR[i] + this.vars.paneXOffset[i];
 				this.vars.paneTPre[i] = this.vars.paneT[i] - this.vars.paneYOffset[i];
 				this.vars.paneBPre[i] = this.vars.paneB[i] + this.vars.paneYOffset[i];
 			}	
@@ -241,13 +235,6 @@
 			$(this.element).find('.slide-nav li:nth-child('+this.vars.curr+')').addClass('active').find('.access').append(' <span>(active)</span></div>');
 
 		},
-		gotoSlide: function () {		
-			if(this.vars.targetSlide = this.vars.curr){
-				this.vars.targetSlide = false;	
-			} else {
-				this.changeSlide();
-			}
-		},
 
 //============================================================================
 // Next Slide Function (animate all elements. update "this.vars.curr". loop on last slide.)
@@ -255,6 +242,8 @@
 
 		changeSlide: function () {		
 			var orig = this;
+
+
 		// add .trans class to mark start of animation
 			$(this.element).find('.slide-holder').addClass('trans');
 
@@ -294,30 +283,34 @@
 
 		// animate slide and apply loop styles if necessary.  added fade animations
 			if(this.vars.mainFadeIn && this.vars.mainFadeOut){		
+				if(this.vars.targetSlide > this.vars.slideCount){
+					this.vars.targetSlide = 1;
+				} else if(this.vars.targetSlide < 1){
+					this.vars.targetSlide = this.vars.slideCount;
+				}
 				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
 				this.vars.curr = this.vars.targetSlide;
-			} else if(this.vars.curr < this.vars.slideCount && this.vars.mainFadeIn && this.vars.mainFadeOut){
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 - this.vars.slideWidth }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr++;
-			} else if(this.vars.curr >= this.vars.slideCount && this.vars.mainFadeIn && this.vars.mainFadeOut){
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: 0 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr = 1;
-			} else if(this.vars.targetSlide){	
-				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed);
-				this.vars.curr = this.vars.targetSlide;
-			} else if(this.vars.curr < this.vars.slideCount){
-				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 - this.vars.slideWidth }, this.vars.speed);
-				this.vars.curr++;
-			} else if(this.vars.curr >= this.vars.slideCount){
+			} else if(this.vars.targetSlide > this.vars.slideCount || this.vars.targetSlide < 1){
 				$(this.element).find('.slide-holder').find('li:first-child').addClass('loop').css('right','-'+this.vars.slideWidth+'px');
 				$(this.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left',this.vars.slideWidth+'px');
-				$(this.element).find('.slide-holder').stop().animate({ left: '-=' + this.vars.slideWidth }, this.vars.speed, function(){
-					$(orig.element).find('.slide-holder').find('li:first-child').removeClass('loop').css('right','auto');
-					$(orig.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left','0px');
-					$(orig.element).find('.slide-holder').css('left', '0px');
-				});
-				this.vars.curr = 1;
-			} 
+				if(this.vars.targetSlide > this.vars.slideCount){
+					$(orig.element).find('.slide-holder').stop().animate({ left: '-=' + orig.vars.slideWidth }, orig.vars.speed, function(){
+						$(orig.element).find('.slide-holder').find('li:first-child').removeClass('loop').css('right','auto');
+						$(orig.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left','0px');
+						$(orig.element).find('.slide-holder').css('left', '0px');
+					});
+					orig.vars.curr = 1;
+				} else {
+					$(orig.element).find('.slide-holder').stop().css('left','-'+orig.vars.totalWidth+'px').animate({ left: '+=' + orig.vars.slideWidth }, orig.vars.speed, function(){			
+						$(orig.element).find('.slide-holder').find('li:first-child').removeClass('loop').css('right','auto');
+						$(orig.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left','0px');
+					});
+					orig.vars.curr = this.vars.slideCount;
+				}
+			} else {				
+				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed);
+				this.vars.curr = this.vars.targetSlide;
+			}
 
 		// animate in new pane
 		var x = -1;
@@ -336,21 +329,21 @@
 		// remove .trans class and reset timer when animation is complete
 			$(this.element).find('.slide-holder.trans').promise().done(function(){
 						$(orig.element).find('.slide-holder').removeClass('trans');
-						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
+						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && orig.vars.autoStop != orig.vars.autoPlayCount){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.vars.autoPlayCount++;
-								orig.nextGate();
+								orig.nextSlide();
 							}, orig.vars.autoPlay);
 						}
-						if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
+						if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && orig.vars.autoStop != orig.vars.autoPlayCount){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.vars.autoPlayCount++;
-								orig.prevGate();
+								orig.prevSlide();
 							}, orig.vars.autoPlay * -1) }
 						orig.vars.afterSlide();
 						if(orig.vars.autoPlayCount == orig.vars.autoStop){
 							if (orig.vars.pauseOnAutoStop == true){
-								orig.autoStop(orig);
+								orig.stopAutoPlay(orig);
 							}
 							else{
 								orig.vars.autoPlay = 0;
@@ -359,222 +352,37 @@
 								$(orig.element).find('.pauser, .controls').remove();
 							}
 						}
-						if(orig.vars.autoStop === 9999){ orig.vars.autoStop = 1; }
 						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
 						$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
 			});
 		},
 
 //============================================================================
-// Next Slide Function (animate all elements. update "this.vars.curr". loop on last slide.)
-//============================================================================
-
-		nextSlide: function () {		
-			var orig = this;
-		// add .trans class to mark start of animation
-			$(this.element).find('.slide-holder').addClass('trans');
-
-
-			this.paneCalc();
-			var i = -1;
-			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
-		// animate out pane
-			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).stop().css('left' , this.vars.paneL[i] + 'px').css('right' , this.vars.paneR[i] + 'px').css('top' , this.vars.paneT[i] + 'px').css('bottom' , this.vars.paneB[i] + 'px').animate({ 
-				left: this.vars.paneL[i] - this.vars.paneXOffset[i] ,
-				right: this.vars.paneR[i] - this.vars.paneXOffset[i] ,
-				top: this.vars.paneT[i] - this.vars.paneYOffset[i] ,
-				bottom: this.vars.paneB[i] + this.vars.paneYOffset[i] ,
-				opacity: this.vars.paneFade 
-			}, this.vars.paneSpeed[i], this.vars.easing);
-			}
-
-		// animate slide and apply loop styles if necessary.  added fade animations
-			if(this.vars.targetSlide && this.vars.mainFadeIn && this.vars.mainFadeOut){		
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr = this.vars.targetSlide;
-			} else if(this.vars.curr < this.vars.slideCount && this.vars.mainFadeIn && this.vars.mainFadeOut){
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 - this.vars.slideWidth }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr++;
-			} else if(this.vars.curr >= this.vars.slideCount && this.vars.mainFadeIn && this.vars.mainFadeOut){
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: 0 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr = 1;
-			} else if(this.vars.targetSlide){	
-				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed);
-				this.vars.curr = this.vars.targetSlide;
-			} else if(this.vars.curr < this.vars.slideCount){
-				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 - this.vars.slideWidth }, this.vars.speed);
-				this.vars.curr++;
-			} else if(this.vars.curr >= this.vars.slideCount){
-				$(this.element).find('.slide-holder').find('li:first-child').addClass('loop').css('right','-'+this.vars.slideWidth+'px');
-				$(this.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left',this.vars.slideWidth+'px');
-				$(this.element).find('.slide-holder').stop().animate({ left: '-=' + this.vars.slideWidth }, this.vars.speed, function(){
-					$(orig.element).find('.slide-holder').find('li:first-child').removeClass('loop').css('right','auto');
-					$(orig.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left','0px');
-					$(orig.element).find('.slide-holder').css('left', '0px');
-				});
-				this.vars.curr = 1;
-			} 
-
-		// animate in new pane
-		var x = -1;
-		while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
-			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(x).stop().css('left' , this.vars.paneLPost[x] + 'px').css('right' , this.vars.paneRPost[x] + 'px').css('top' , this.vars.paneTPost[x] + 'px').css('bottom' , this.vars.paneBPost[x] + 'px').delay(this.vars.paneDelay[x]).animate({ 
-				left: this.vars.paneL[x] ,
-				right: this.vars.paneR[x] ,
-				top: this.vars.paneT[x] ,
-				bottom: this.vars.paneB[x] ,
-				opacity: 1 
-			}, this.vars.paneSpeed[x], this.vars.easing);
-		}
-
-			this.vars.targetSlide = false;
-			if(this.vars.useNav){this.updateNav()}
-		// remove .trans class and reset timer when animation is complete
-			$(this.element).find('.slide-holder.trans').promise().done(function(){
-						$(orig.element).find('.slide-holder').removeClass('trans');
-						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
-							orig.vars.autoTimer = setTimeout(function(){
-								orig.vars.autoPlayCount++;
-								orig.nextGate();
-							}, orig.vars.autoPlay);
-						}
-						if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
-							orig.vars.autoTimer = setTimeout(function(){
-								orig.vars.autoPlayCount++;
-								orig.prevGate();
-							}, orig.vars.autoPlay * -1) }
-						orig.vars.afterSlide();
-						if(orig.vars.autoPlayCount == orig.vars.autoStop){
-							if (orig.vars.pauseOnAutoStop == true){
-								orig.autoStop(orig);
-							}
-							else{
-								orig.vars.autoPlay = 0;
-								orig.vars.pauseOnHover = false;
-								orig.vars.pauseOnFocus = false;
-								$(orig.element).find('.pauser, .controls').remove();
-							}
-						}
-						if(orig.vars.autoStop === 9999){ orig.vars.autoStop = 1; }
-						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
-						$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
-			});
-		},
-
-//============================================================================
-// Previous Slide Function (animate all elements. update "this.vars.curr". loop on first slide.)
-//============================================================================
-		prevSlide: function () {										
-
-		// add .trans class to mark start of animation
-			$(this.element).find('.slide-holder').addClass('trans');
-
-
-			this.paneCalc();
-			var i = -1;
-			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
-		// animate out pane
-			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(i).stop().css('left' , this.vars.paneL[i] + 'px').css('right' , this.vars.paneR[i] + 'px').css('top' , this.vars.paneT[i] + 'px').css('bottom' , this.vars.paneB[i] + 'px').animate({ 
-				left: this.vars.paneLPost[i] ,
-				right: this.vars.paneRPost[i] ,
-				top: this.vars.paneTPost[i] ,
-				bottom: this.vars.paneBPost[i] ,
-				opacity: this.vars.paneFade 
-			}, this.vars.paneSpeed[i], this.vars.easing);
-		}
-
-			var orig = this;
-		// animate slide and apply loop styles if necessary
-			if(this.vars.targetSlide && this.vars.mainFadeIn && this.vars.mainFadeOut){		
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr = this.vars.targetSlide;
-			} else if(this.vars.curr > 1 && this.vars.mainFadeIn && this.vars.mainFadeOut){
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 + this.vars.slideWidth  }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr--;
-			} else if(this.vars.curr <= 1 && this.vars.mainFadeIn && this.vars.mainFadeOut){
-				$(this.element).find('.slide-holder').stop().animate({ opacity: 0 }, this.vars.mainFadeOut).animate({ left: (this.vars.slideWidth - this.vars.totalWidth) }, this.vars.speed).animate({ opacity: 1 }, this.vars.mainFadeIn);
-				this.vars.curr = this.vars.slideCount;
-			} else if(this.vars.targetSlide){		
-				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed);
-				this.vars.curr = this.vars.targetSlide;
-			} else if(this.vars.curr > 1){
-				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.curr-1) * this.vars.slideWidth)* -1 + this.vars.slideWidth  }, this.vars.speed);
-				this.vars.curr--;
-			} else if(this.vars.curr <= 1){
-				$(this.element).find('.slide-holder').find('li:first-child').addClass('loop').css('right','-'+this.vars.slideWidth+'px');
-				$(this.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left',this.vars.slideWidth+'px');
-				$(this.element).find('.slide-holder').stop().css('left','-'+this.vars.totalWidth+'px').animate({ left: '+=' + this.vars.slideWidth }, this.vars.speed, function(){			
-					$(orig.element).find('.slide-holder').find('li:first-child').removeClass('loop').css('right','auto');
-					$(orig.element).find('.slide-holder').find('li:nth-child(2)').css('margin-left','0px');
-				});
-				this.vars.curr = this.vars.slideCount;
-			} 
-
-			var x = -1;
-			while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').length){	
-		// animate in new pane
-			$(this.element).find('li:nth-child('+ this.vars.curr +')').find('div.pane').eq(x).stop().css('left' , (this.vars.paneL[x] - this.vars.paneXOffset[x]) + 'px').css('right' , (this.vars.paneR[x] + this.vars.paneXOffset[x]) + 'px').css('top' , (this.vars.paneT[x] - this.vars.paneYOffset[x]) + 'px').css('bottom' , (this.vars.paneB[x] + this.vars.paneYOffset[x]) + 'px').delay(this.vars.paneDelay[x]).animate({ 
-				left: this.vars.paneL[x] ,
-				right: this.vars.paneR[x] ,
-				top: this.vars.paneT[x] ,
-				bottom: this.vars.paneB[x] ,
-				opacity: 1 
-			}, this.vars.paneSpeed[x], this.vars.easing);
-			}
-
-			this.vars.targetSlide = false;
-			if(this.vars.useNav){this.updateNav()}
-
-
-		// remove .trans class and reset timer when animation is complete
-			$(this.element).find('.slide-holder.trans').promise().done(function(){
-						$(orig.element).find('.slide-holder').removeClass('trans');
-						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
-							orig.vars.autoTimer = setTimeout(function(){
-								orig.vars.autoPlayCount++;
-								orig.nextGate();
-							}, orig.vars.autoPlay);
-						}
-						if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && orig.vars.curr != orig.vars.autoPlayCount){ 
-							orig.vars.autoTimer = setTimeout(function(){
-								orig.vars.autoPlayCount++;
-								orig.prevGate();
-							}, orig.vars.autoPlay * -1) }
-						orig.vars.afterSlide();
-						if(orig.vars.autoPlayCount == orig.vars.autoStop){
-							if (orig.vars.pauseOnAutoStop == true){
-								orig.autoStop(orig);
-							}
-							else{
-								orig.vars.autoPlay = 0;
-								orig.vars.pauseOnHover = false;
-								orig.vars.pauseOnFocus = false;
-								$(orig.element).find('.pauser, .controls').remove();
-							}
-						}
-						if(orig.vars.autoStop === 9999){ orig.vars.autoStop = 1; }
-						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
-						$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
-
-			});
-		},
-
-//============================================================================
-// Gate Functions
+// Next & Prev Functions
 // (fire off next and previous. control timer and prevent next or previous during a slide transition)
 //============================================================================
 
-		nextGate: function () {
+		nextSlide: function () {
 			if (!$(this.element).find('.slide-holder.trans').length) {
 				clearTimeout(this.vars.autoTimer);
-				this.nextSlide();
+				this.vars.targetSlide = this.vars.curr + 1;
+				this.changeSlide();
 			}
 		},
-		prevGate: function () {
+		prevSlide: function () {
 			if (!$(this.element).find('.slide-holder.trans').length) {
 				clearTimeout(this.vars.autoTimer);
-				this.prevSlide();
+				this.vars.targetSlide = this.vars.curr - 1;
+				this.changeSlide();
 			}
+		},
+		goToSlide: function (target) {
+			if (!$(this.element).find('.slide-holder.trans').length && target != this.vars.curr) {
+				clearTimeout(this.vars.autoTimer);
+				this.vars.targetSlide = target;
+				this.changeSlide();
+			}
+
 		},
 
 //============================================================================
@@ -585,7 +393,7 @@
 			$(orig.element).find('.pauser').addClass('paused');
 		},
 
-		autoStop: function (orig) {			
+		stopAutoPlay: function (orig) {			
 			clearTimeout(orig.vars.autoTimer);
 			$(orig.element).find('.pauser').addClass('paused stopped');
 		},
@@ -597,14 +405,14 @@
 					if(orig.vars.autoStop == orig.vars.autoPlayCount - 1){
 						orig.vars.autoPlayCount = 1;
 					}
-					orig.nextGate()
+					orig.nextSlide()
 				}, speed)}
 				if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
 					orig.vars.autoPlayCount++;
 					if(orig.vars.autoStop == orig.vars.autoPlayCount - 1){
 						orig.vars.autoPlayCount = 1;
 					}
-					orig.prevGate()
+					orig.prevSlide()
 				}, speed)}
 				$(orig.element).find('.pauser').removeClass('paused');
 			}
@@ -648,7 +456,7 @@
 			}
 			if(this.vars.pauseButton){
 				$(orig.element).find('.pauser').click(function(event){
-					orig.autoStop(orig);
+					orig.stopAutoPlay(orig);
 					return false;;
 				});
 				$(orig.element).find('.player').click(function(event){
