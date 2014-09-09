@@ -1,4 +1,5 @@
 /* 
+ * Helium Slider v1.9.2
  * Developed by Harun eggleton - Under MIT License
  * jquery 1.8.3
  * jQuery-mutate (https://github.com/jqui-dot-net/jQuery-mutate)
