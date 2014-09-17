@@ -484,11 +484,12 @@ $(function() {
         paneSpeed: [500,500,500] ,
         mainFadeIn: false ,
         mainFadeOut: false ,
-        speed: 1000,
-        autoPlay: 4000,
+        speed: 500,
+        autoPlay: 1000,
         pauseControls: true,
-        autoStop: false,
-        pauseOnAutoStop: false,
+        autoStopSlide: false ,
+        autoStopLoops: false ,  // stop auto play after looping autoplay this many times: number or false
+        autoStopPause: false,   // when autoplay ends, pause and keep controls available.
         pauseOnHover: false,
         pauseOnFocus: false,
         easing: 'linear'
