@@ -353,14 +353,14 @@
 		nextSlide: function () {
 			if (!$(this.element).find('.slide-holder.trans').length) {
 				clearTimeout(this.vars.autoTimer);
-				this.vars.targetSlide = this.vars.curr + 1;
+				this.vars.targetSlide = ++this.vars.curr;
 				this.changeSlide();
 			}
 		},
 		prevSlide: function () {
 			if (!$(this.element).find('.slide-holder.trans').length) {
 				clearTimeout(this.vars.autoTimer);
-				this.vars.targetSlide = this.vars.curr - 1;
+				this.vars.targetSlide = --this.vars.curr;
 				this.changeSlide();
 			}
 		},
@@ -408,6 +408,8 @@
 //============================================================================
 		initPause: function () {
 			var orig = this;
+			if(orig.vars.autoStop == "first"){ orig.vars.autoStop = orig.vars.slideCount }
+			if(orig.vars.autoStop == "last"){ orig.vars.autoStop = orig.vars.slideCount - 1 }
 			if(!($(this.element).find('.pauser').length) && (this.vars.pauseOnFocus || this.vars.pauseOnHover || this.vars.pauseControls)){
 				$(orig.element).append('<div class="controls"><a href="" class="pauser">Pause</a></div>');
 				if(orig.vars.pauseControls){
