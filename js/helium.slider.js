@@ -29,8 +29,8 @@
 		autoStopLoop: false ,   // stop auto play after looping autoplay this many times: number or false
 		autoStopPause: false,   // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions -MG 8/21/14
 		pauseOnHover: false ,   // pause autoplay on hover: true or false
-		pauseControls: false ,  // include controls for pause and play: true or false
-		pauseOnFocus: false     // pause autoplay when any element in the slider is focused: true or false
+		pauseOnFocus: false ,   // pause autoplay when any element in the slider is focused: true or false
+		pauseControls: false    // include controls for pause and play: true or false
 	},
 	priv = {
 		slideWidth: false,

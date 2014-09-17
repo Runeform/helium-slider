@@ -197,7 +197,7 @@ div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width
         <li>autoplay</li>
         <li>adjustible animation speeds/delays</li>
         <li>afterSlide callback for custom javascipt after each slide transitions</li>
-        <li> any number of individually animated panes on each slide (these fully customizable HTML elements each have thier own options for speed, delay, x offset, y offset and fade.)</li>
+        <li>any number of individually animated panes on each slide (these fully customizable HTML elements each have thier own options for speed, delay, x offset, y offset and fade.)</li>
     </ul>
     <h2>Examples:</h2>
     <div id="slider-eg-1" class="helium-slider loading">
@@ -418,12 +418,12 @@ div.helium-slider ul.slide-nav li.active{ background: #444; }
 div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width:0; }
 </textarea>
     <h3>4: initialize</h3>
-    <p>Place the follow before the end of the BODY tag to initialize your slider.  this example includes all options for initializing slider with commented descriptions</p>
+    <p>Place the follow before the end of the BODY tag to initialize your slider.  this example includes all options for initializing the slider</p>
     <a href="" class="selector" title="">&#8595; select all</a>
 <textarea readonly name="" style="height:330px;">
 <script type="text/javascript" charset="utf-8">
 $(function() {
-    $("#your-slider-id").heliumSlider({
+    $("#your-slider-id").heliumSlider({        
         paneFade: true ,        // pane fade in: true or false
         paneXOffset: [300] ,    // pane animate X offset: pixel value
         paneYOffset: [0] ,      // pane animate Y offset: pixel value
@@ -439,11 +439,12 @@ $(function() {
         afterSlide: function(){
                                 // this callback function fires after the main slide transition takes place
         } ,
-        autoStop: false ,       // stop auto play after this number of transitions: number or false
-        pauseOnAutoStop: false, // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions: true or false -MG 8/21/14
+        autoStopSlide: false ,  // stop auto play on this slide: number or false
+        autoStopLoop: false ,   // stop auto play after looping autoplay this many times: number or false
+        autoStopPause: false,   // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions
         pauseOnHover: false ,   // pause autoplay on hover: true or false
-        pauseControls: false ,  // use play and pause control buttons: true or false
-        pauseOnFocus: false     // pause autoplay when any element in the slider is focused: true or false
+        pauseOnFocus: false ,   // pause autoplay when any element in the slider is focused: true or false
+        pauseControls: false    // include controls for pause and play: true or false
     });
 });
 </script></textarea>
@@ -476,38 +477,38 @@ $(function() {
     <script src="js/helium.slider.js"></script>
     <script type="text/javascript" charset="utf-8">
     $(function() {
-    $("#slider-eg-1").heliumSlider({
-        paneFade: true ,
-        paneXOffset: [50,50,50] ,
-        paneYOffset: [50,50,50] ,
-        paneDelay: [1200,1000,800] ,
-        paneSpeed: [500,500,500] ,
-        mainFadeIn: false ,
-        mainFadeOut: false ,
-        speed: 500,
-        autoPlay: 1000,
-        pauseControls: true,
-        autoStopSlide: false ,
-        autoStopLoop: false ,  // stop auto play after looping autoplay this many times: number or false
-        autoStopPause: false,   // when autoplay ends, pause and keep controls available.
-        pauseOnHover: false,
-        pauseOnFocus: false,
-        easing: 'linear'
-    });
-    $("#slider-eg-2").heliumSlider({
-        mainFadeIn: false ,
-        mainFadeOut: false ,
-        speed: 0,
-        autoPlay: 4000,
-        pauseOnHover: false,
-        mainFadeIn: 300 ,     // fade new slide in speed: milliseconds or false
-        mainFadeOut: 100 ,    // fade old slide out speed: milliseconds or false
-        easing: 'swing'
-    });
-    $('.selector').click(function(){
-    $(this).next().focus().select();
-    return false;
-    });
+        $("#slider-eg-1").heliumSlider({
+            paneFade: true ,
+            paneXOffset: [50,50,50] ,
+            paneYOffset: [50,50,50] ,
+            paneDelay: [1200,1000,800] ,
+            paneSpeed: [500,500,500] ,
+            mainFadeIn: false ,
+            mainFadeOut: false ,
+            speed: 500,
+            autoPlay: 1000,
+            pauseControls: true,
+            autoStopSlide: false ,
+            autoStopLoop: false ,  // stop auto play after looping autoplay this many times: number or false
+            autoStopPause: false,   // when autoplay ends, pause and keep controls available.
+            pauseOnHover: false,
+            pauseOnFocus: false,
+            easing: 'linear'
+        });
+        $("#slider-eg-2").heliumSlider({
+            mainFadeIn: false ,
+            mainFadeOut: false ,
+            speed: 0,
+            autoPlay: 4000,
+            pauseOnHover: false,
+            mainFadeIn: 300 ,     // fade new slide in speed: milliseconds or false
+            mainFadeOut: 100 ,    // fade old slide out speed: milliseconds or false
+            easing: 'swing'
+        });
+        $('.selector').click(function(){
+            $(this).next().focus().select();
+            return false;
+        });
     });
     </script>
 </body>
