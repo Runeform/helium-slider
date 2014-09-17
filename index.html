@@ -190,8 +190,10 @@ div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width
     <h2>Features:</h2>
     <ul class="features">
         <li>fader/slider modes</li>
-        <li>optional navigation buttons</li>
+        <li>optional next/previous buttons</li>
         <li>optional pause on hover</li>
+        <li>optional pause on focus</li>
+        <li>optional pause/play button controls</li>
         <li>autoplay</li>
         <li>adjustible animation speeds/delays</li>
         <li>afterSlide callback for custom javascipt after each slide transitions</li>
@@ -200,6 +202,7 @@ div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width
     <h2>Examples:</h2>
     <div id="slider-eg-1" class="helium-slider loading">
         <a href="" class="next">next</a><a href="" class="prev">prev</a>
+        <div class="controls on"><a href="" class="pauser"></a><a href="" class="player"></a></div>
         <ul class="slide-nav">
         </ul>
         <div class="slide-window">
@@ -439,7 +442,7 @@ $(function() {
         autoStop: false ,       // stop auto play after this number of transitions: number or false
         pauseOnAutoStop: false, // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions: true or false -MG 8/21/14
         pauseOnHover: false ,   // pause autoplay on hover: true or false
-        pauseButton: false ,    // pause autoplay on hover: true or false
+        pauseControls: false ,  // use play and pause control buttons: true or false
         pauseOnFocus: false     // pause autoplay when any element in the slider is focused: true or false
     });
 });
@@ -483,7 +486,7 @@ $(function() {
         mainFadeOut: false ,
         speed: 1000,
         autoPlay: 4000,
-        pauseButton: false,
+        pauseControls: true,
         autoStop: false,
         pauseOnAutoStop: false,
         pauseOnHover: false,
