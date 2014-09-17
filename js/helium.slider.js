@@ -26,7 +26,7 @@
 			                    // this callback function fires after the main slide transition takes place
 		} ,
 		autoStopSlide: false ,  // stop auto play on this slide: number or false
-		autoStopLoops: false ,  // stop auto play after looping autoplay this many times: number or false
+		autoStopLoop: false ,   // stop auto play after looping autoplay this many times: number or false
 		autoStopPause: false,   // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions -MG 8/21/14
 		pauseOnHover: false ,   // pause autoplay on hover: true or false
 		pauseControls: false ,  // include controls for pause and play: true or false
@@ -141,12 +141,14 @@
 				}
 			});
 
-
-
-
 			//============================================================================
 			// Auto Play
 			//============================================================================
+
+			//initialize pause functionality			
+			this.initPause();
+
+			//set up first autoplay transition
 			if (this.vars.autoPlay >= 20){ this.vars.autoTimer = setTimeout( function(){
 					orig.nextSlide()
 				}, this.vars.autoPlay + this.vars.speed)}
@@ -154,9 +156,6 @@
 					orig.vars.autoLoopCount++;
 					orig.prevSlide()
 				}, (this.vars.autoPlay - this.vars.speed) * -1)}
-
-			this.initPause();
-
 		},
 
 //============================================================================
@@ -317,18 +316,18 @@
 		// remove .trans class and reset timer when animation is complete
 			$(this.element).find('.slide-holder.trans').promise().done(function(){
 						$(orig.element).find('.slide-holder').removeClass('trans');
-						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoops && orig.vars.curr == orig.vars.autoStopSlide)){ 
+						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide)){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.nextSlide();
 								if(orig.vars.curr == orig.vars.slideCount){	++orig.vars.autoLoopCount }
 							}, orig.vars.autoPlay);
-						} else if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoops && orig.vars.curr == orig.vars.autoStopSlide)){ 
+						} else if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide)){ 
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.prevSlide();
 								if(orig.vars.curr == 1){ ++orig.vars.autoLoopCount }
 							}, orig.vars.autoPlay * -1);
 						}
-						if(orig.vars.autoLoopCount == orig.vars.autoStopLoops && orig.vars.curr == orig.vars.autoStopSlide){
+						if(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide){
 							if (orig.vars.autoStopPause == true){
 								orig.stopAutoPlay();
 							} else {
@@ -407,9 +406,9 @@
 			if(orig.vars.autoStopSlide == "first"){ orig.vars.autoStopSlide = 1 }
 			if(orig.vars.autoStopSlide == "last"){ orig.vars.autoStopSlide = orig.vars.slideCount }
 			//add one loop to compensate for premature value matching in specific scenarios
-			if(orig.vars.autoStopSlide == orig.vars.slideCount && orig.vars.autoPlay >= 20 || orig.vars.autoStopSlide == 1 && orig.vars.autoPlay <= 20){ ++orig.vars.autoStopLoops }
+			if(orig.vars.autoStopSlide == orig.vars.slideCount && orig.vars.autoPlay >= 20 || orig.vars.autoStopSlide == 1 && orig.vars.autoPlay <= 20){ ++orig.vars.autoStopLoop }
 			//not setting loops results in loops being "0"
-			if(orig.vars.autoStopSlide && !orig.vars.autoStopLoops){ orig.vars.autoStopLoops = 0 }
+			if(orig.vars.autoStopSlide && !orig.vars.autoStopLoop){ orig.vars.autoStopLoop = 0 }
 			if(!($(this.element).find('.pauser').length) && (this.vars.pauseOnFocus || this.vars.pauseOnHover || this.vars.pauseControls)){
 				$(orig.element).append('<div class="controls"><a href="" class="pauser">Pause</a></div>');
 				if(orig.vars.pauseControls){
