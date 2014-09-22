@@ -1,5 +1,5 @@
 /* 
- * Helium Slider v1.9.2
+ * Helium Slider v2.0.1
  * Developed by Harun eggleton - Under MIT License
  * jquery 1.8.3
  * jQuery-mutate (https://github.com/jqui-dot-net/jQuery-mutate)
@@ -79,7 +79,7 @@
 			});
 			if(this.vars.useNav){this.initNav()}
 			if(this.vars.useNav){this.updateNav()}
-			$(this.element).find('ul.slide-nav li').click(function(){
+			$(this.element).find('ul.slide-nav li[data-slide-index]').click(function(){
 				orig.goToSlide($(this).attr('data-slide-index'));
 			});
 
@@ -329,7 +329,9 @@
 						}
 						if(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide){
 							if (orig.vars.autoStopPause == true){
+								orig.vars.autoLoopCount = 0;
 								orig.stopAutoPlay();
+								$(orig.element).toggleClass('redraw');
 							} else {
 								orig.vars.autoPlay = 0;
 								orig.vars.pauseOnHover = false;
@@ -394,6 +396,7 @@
 					orig.prevSlide()
 				}, speed)}
 				$(orig.element).find('.pauser').removeClass('paused');
+				$(orig.element).toggleClass('redraw');
 			}
 		},
 
@@ -430,11 +433,11 @@
 				});
 			}
 			if(this.vars.pauseOnFocus){
-				$(orig.element).focusin(function(event){
+				$(orig.element).find('ul.slide-holder').focusin(function(event){
 					orig.pauseAutoPlay();
 					event.stopPropagation();
 				});
-				$(orig.element).focusout(function(event){
+				$(orig.element).find('ul.slide-holder').focusout(function(event){
 					if((!orig.vars.pauseOnHover || !$(orig.element).find('*:hover').length) && !$(orig.element).find('.pauser.stopped').length){
 						orig.resumeAutoPlay(orig.vars.autoPlay)
 					}
