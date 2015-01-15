@@ -352,18 +352,10 @@
 //============================================================================
 
 		nextSlide: function () {
-			if (!$(this.element).find('.slide-holder.trans').length) {
-				clearTimeout(this.vars.autoTimer);
-				this.vars.targetSlide = ++this.vars.curr;
-				this.changeSlide();
-			}
+			this.goToSlide(this.vars.curr + 1);
 		},
 		prevSlide: function () {
-			if (!$(this.element).find('.slide-holder.trans').length) {
-				clearTimeout(this.vars.autoTimer);
-				this.vars.targetSlide = --this.vars.curr;
-				this.changeSlide();
-			}
+			this.goToSlide(this.vars.curr - 1);
 		},
 		goToSlide: function (target) {
 			if (!$(this.element).find('.slide-holder.trans').length && target != this.vars.curr) {
