@@ -1,5 +1,5 @@
 /* 
- * Helium Slider v2.0.2
+ * Helium Slider v2.0.3
  * Developed by Harun eggleton - Under MIT License
  * jquery 1.8.3
  * jQuery-mutate (https://github.com/jqui-dot-net/jQuery-mutate)
@@ -341,8 +341,8 @@
 						}
 						orig.vars.afterSlide();
 						
-						$(orig.element).find('li').find(orig.vars.focusable).attr('tabindex','-1');
-						$(orig.element).find('li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
+						$(orig.element).find('ul.slide-holder li').find(orig.vars.focusable).attr('tabindex','-1');
+						$(orig.element).find('ul.slide-holder li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
 			});
 		},
 
