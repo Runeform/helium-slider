@@ -1,5 +1,5 @@
 /* 
- * Helium Slider v2.0.4
+ * Helium Slider v2.0.5
  * Developed by Harun eggleton - Under MIT License
  * jquery 1.8.3
  * jQuery-mutate (https://github.com/jqui-dot-net/jQuery-mutate)
@@ -376,12 +376,12 @@
 		pauseAutoPlay: function () {
 			var orig = this;
 			clearTimeout(orig.vars.autoTimer);
-			$(orig.element).find('.pauser').addClass('paused');
+			$(orig.element).find('.pauser').addClass('paused').html('Play Slideshow');
 		},
 		stopAutoPlay: function () {
 			var orig = this;
 			clearTimeout(orig.vars.autoTimer);
-			$(orig.element).find('.pauser').addClass('paused stopped');
+			$(orig.element).find('.pauser').addClass('paused stopped').html('Play Slideshow');
 		},
 		resumeAutoPlay: function (speed) {
 			var orig = this;
@@ -392,7 +392,7 @@
 				if (orig.vars.autoPlay <= -20){ orig.vars.autoTimer = setTimeout( function(){
 					orig.prevSlide()
 				}, speed)}
-				$(orig.element).find('.pauser').removeClass('paused');
+				$(orig.element).find('.pauser').removeClass('paused').html('Pause Slideshow');
 				$(orig.element).toggleClass('redraw');
 			}
 		},
@@ -409,10 +409,10 @@
 			if(orig.vars.autoStopSlide == orig.vars.slideCount && orig.vars.autoPlay >= 20 || orig.vars.autoStopSlide == 1 && orig.vars.autoPlay <= 20){ ++orig.vars.autoStopLoop }
 			//not setting loops results in loops being "0"
 			if(orig.vars.autoStopSlide && !orig.vars.autoStopLoop){ orig.vars.autoStopLoop = 0 }
-			if(!($(this.element).find('.pauser').length) && (this.vars.pauseOnFocus || this.vars.pauseOnHover || this.vars.pauseControls)){
-				$(orig.element).append('<div class="controls"><a href="" class="pauser">Pause</a></div>');
+			if(this.vars.pauseOnFocus || this.vars.pauseOnHover || this.vars.pauseControls){
+				$(orig.element).find('.controls').html('<a href="" class="pauser">Pause Slideshow</a>');
 				if(orig.vars.pauseControls){
-					$(orig.element).find('.controls').addClass('on').append('<a href="" class="player">Play</a>');
+					$(orig.element).find('.controls').addClass('on').find('.pauser').addClass('player');
 				}
 			} else if($(this.element).find('.pauser').length && !this.vars.pauseControls){
 				$(orig.element).find('.controls').removeClass('on');
@@ -423,18 +423,18 @@
 					event.stopPropagation();
 				});
 				$(orig.element).find('ul.slide-holder').mouseout(function(event){
-					if((!orig.vars.pauseOnFocus || !$(orig.element).find('*:focus').length) && !$(orig.element).find('.pauser.stopped').length){
+					if((!orig.vars.pauseOnFocus || !$(orig.element).find('ul.slide-holder *:focus, ul.slide-nav li[data-slide-index] *:focus, .next:focus, .prev:focus').length) && !$(orig.element).find('.pauser.stopped').length){
 						orig.resumeAutoPlay(orig.vars.autoPlay)
 					}
 					event.stopPropagation();					
 				});
 			}
 			if(this.vars.pauseOnFocus){
-				$(orig.element).find('ul.slide-holder, ul.slide-nav, .next, .prev').focusin(function(event){
+				$(orig.element).find('ul.slide-holder, ul.slide-nav li[data-slide-index], .next, .prev').focusin(function(event){
 					orig.pauseAutoPlay();
 					event.stopPropagation();
 				});
-				$(orig.element).find('ul.slide-holder, ul.slide-nav, .next, .prev').focusout(function(event){
+				$(orig.element).find('ul.slide-holder, ul.slide-nav li[data-slide-index], .next, .prev').focusout(function(event){
 					if((!orig.vars.pauseOnHover || !$(orig.element).find('*:hover').length) && !$(orig.element).find('.pauser.stopped').length){
 						orig.resumeAutoPlay(orig.vars.autoPlay)
 					}
@@ -443,14 +443,14 @@
 			}
 			if(this.vars.pauseControls){
 				$(orig.element).find('.pauser').click(function(event){
-					orig.stopAutoPlay();
-					return false;;
-				});
-				$(orig.element).find('.player').click(function(event){
-					if($(orig.element).find('.stopped').length){
-						$(orig.element).find('.pauser').removeClass('stopped');
+					if($(orig.element).find('.paused').length){
+						if($(orig.element).find('.stopped').length){
+							$(orig.element).find('.pauser').removeClass('stopped');
 							orig.resumeAutoPlay(100);
 						}
+					} else {
+						orig.stopAutoPlay();
+					}
 					return false;				
 				});
 			}

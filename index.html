@@ -144,10 +144,10 @@ div.helium-slider .controls.on{
 }
 div.helium-slider .controls.on .pauser{
     position: static;
-    margin:0 14px 0 0;
+    margin:0;
     opacity: 0.7
 }
-div.helium-slider .controls.on .player{
+div.helium-slider .controls.on .paused.player{
     display: inline-block;
     text-indent: -9999px;
     vertical-align:top;
@@ -155,9 +155,10 @@ div.helium-slider .controls.on .player{
     width:0;
     border-top: 12px solid transparent;
     border-right: none;
+    margin: 0 3px;
     border-bottom: 12px solid transparent;
     border-left: 20px solid white;
-    opacity: 0.7;
+    opacity: 0.7 !important;
 }
 div.helium-slider ul.slide-nav{
     text-align: center;
@@ -169,17 +170,19 @@ div.helium-slider ul.slide-nav{
     width: 100%;
     z-index: 11;
     display: none;
-    }
+}
 div.helium-slider ul.slide-nav li{
+    display: inline-block;
+}
+    div.helium-slider ul.slide-nav li a{
+    display: block;
     background: #999;
     margin: 0px 4px;
     height:10px;
     width: 10px;
-    display: inline-block;
-    cursor: pointer;
     border-radius: 5px;
-    }
-div.helium-slider ul.slide-nav li.active{ background: #444; }
+}
+div.helium-slider ul.slide-nav li.active a{ background: #444; }
 div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width:0; }
     </style>
 </head>
@@ -202,7 +205,6 @@ div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width
     <h2>Examples:</h2>
     <div id="slider-eg-1" class="helium-slider loading">
         <a href="" class="next">next</a><a href="" class="prev">prev</a>
-        <div class="controls on"><a href="" class="pauser"></a><a href="" class="player"></a></div>
         <ul class="slide-nav">
         </ul>
         <div class="slide-window">
@@ -227,6 +229,7 @@ div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width
                 </li>
             </ul>
         </div>
+        <div class="controls"></div>
     </div>
     <div id="slider-eg-2" class="helium-slider loading">
         <a href="" class="next">next</a><a href="" class="prev">prev</a>
@@ -281,6 +284,7 @@ div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width
             </li>
         </ul>
     </div>
+    <div class="controls"></div>
 </div></textarea>
     <h3>3: Add CSS</h3>
     <p>Add the following CSS in main.css (or any desired css location)</p>
@@ -362,12 +366,13 @@ div.helium-slider .pauser{
     text-indent: -9999px;
     vertical-align:top;
     }
-div.helium-slider .pauser.paused{
-    opacity: 1;
-    }
 div.helium-slider .controls.on .player:hover, div.helium-slider .controls.on .pauser:hover{
     opacity: 0.85;
     }
+div.helium-slider .pauser.paused{
+    opacity: 1 !important;
+    }
+
 div.helium-slider .controls.on{
     position: absolute;
     top: 0;
@@ -379,10 +384,10 @@ div.helium-slider .controls.on{
 }
 div.helium-slider .controls.on .pauser{
     position: static;
-    margin:0 14px 0 0;
+    margin:0;
     opacity: 0.7
 }
-div.helium-slider .controls.on .player{
+div.helium-slider .controls.on .paused.player{
     display: inline-block;
     text-indent: -9999px;
     vertical-align:top;
@@ -390,9 +395,10 @@ div.helium-slider .controls.on .player{
     width:0;
     border-top: 12px solid transparent;
     border-right: none;
+    margin: 0 3px;
     border-bottom: 12px solid transparent;
     border-left: 20px solid white;
-    opacity: 0.7;
+    opacity: 0.7 !important;
 }
 div.helium-slider ul.slide-nav{
     text-align: center;
@@ -404,17 +410,19 @@ div.helium-slider ul.slide-nav{
     width: 100%;
     z-index: 11;
     display: none;
-    }
+}
 div.helium-slider ul.slide-nav li{
+    display: inline-block;
+}
+    div.helium-slider ul.slide-nav li a{
+    display: block;
     background: #999;
     margin: 0px 4px;
     height:10px;
     width: 10px;
-    display: inline-block;
-    cursor: pointer;
     border-radius: 5px;
-    }
-div.helium-slider ul.slide-nav li.active{ background: #444; }
+}
+div.helium-slider ul.slide-nav li.active a{ background: #444; }
 div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width:0; }
 </textarea>
     <h3>4: initialize</h3>
@@ -486,14 +494,14 @@ $(function() {
             mainFadeIn: false ,
             mainFadeOut: false ,
             speed: 500,
-            autoPlay: 4000,
+            autoPlay: 2000,
             navTemplate: "" ,       // template for contents of nav list item
             pauseControls: true,
             autoStopSlide: false ,
             autoStopLoop: false ,  // stop auto play after looping autoplay this many times: number or false
             autoStopPause: false,   // when autoplay ends, pause and keep controls available.
             pauseOnHover: false,
-            pauseOnFocus: false,
+            pauseOnFocus: true,
             easing: 'linear'
         });
         $("#slider-eg-2").heliumSlider({
