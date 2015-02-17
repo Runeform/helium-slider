@@ -1,5 +1,5 @@
 /* 
- * Helium Slider v2.0.3
+ * Helium Slider v2.0.4
  * Developed by Harun eggleton - Under MIT License
  * jquery 1.8.3
  * jQuery-mutate (https://github.com/jqui-dot-net/jQuery-mutate)
@@ -82,7 +82,9 @@
 			$(this.element).find('ul.slide-nav li[data-slide-index]').click(function(){
 				orig.goToSlide($(this).attr('data-slide-index'));
 			});
-
+			$(this.element).find('ul.slide-nav li a').click(function(event){
+				event.preventDefault();
+			});
 
 			//============================================================================
 			// Fade (Set fade variables and initial opacity)
@@ -222,7 +224,7 @@
 			var g = 1;
 			$(this.element).find('.slide-nav li[data-slide-index]').remove();
 			for (g = 1; g <= this.vars.slideCount; ++g)  {
-				$(this.element).find('.slide-nav').append(' <li data-slide-index="'+g+'">'+orig.vars.navTemplate+'<div class="access">Slide '+g+'</div></li>');
+				$(this.element).find('.slide-nav').append(' <li data-slide-index="'+g+'"><a href="">'+orig.vars.navTemplate+'</a><div class="access">Slide '+g+'</div></li>');
 			}
 		},
 		updateNav: function () {
@@ -300,6 +302,9 @@
 				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed);
 				this.vars.curr = this.vars.targetSlide;
 			}
+		// hide offscreen animations from screen readers
+			$(this.element).find('ul.slide-holder li').attr('aria-hidden', 'true');
+			$(this.element).find('ul.slide-holder li:nth-child('+ this.vars.curr +')').removeAttr('aria-hidden');
 		// animate in new pane
 		var x = -1;
 		while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').length){	
@@ -360,7 +365,7 @@
 		goToSlide: function (target) {
 			if (!$(this.element).find('.slide-holder.trans').length && target != this.vars.curr) {
 				clearTimeout(this.vars.autoTimer);
-				this.vars.targetSlide = target;
+				this.vars.targetSlide = parseInt(target);
 				this.changeSlide();
 			}
 		},
@@ -425,11 +430,11 @@
 				});
 			}
 			if(this.vars.pauseOnFocus){
-				$(orig.element).find('ul.slide-holder').focusin(function(event){
+				$(orig.element).find('ul.slide-holder, ul.slide-nav, .next, .prev').focusin(function(event){
 					orig.pauseAutoPlay();
 					event.stopPropagation();
 				});
-				$(orig.element).find('ul.slide-holder').focusout(function(event){
+				$(orig.element).find('ul.slide-holder, ul.slide-nav, .next, .prev').focusout(function(event){
 					if((!orig.vars.pauseOnHover || !$(orig.element).find('*:hover').length) && !$(orig.element).find('.pauser.stopped').length){
 						orig.resumeAutoPlay(orig.vars.autoPlay)
 					}
