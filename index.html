@@ -184,6 +184,25 @@ div.helium-slider ul.slide-nav li{
 }
 div.helium-slider ul.slide-nav li.active a{ background: #444; }
 div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width:0; }
+
+
+
+div.helium-slider ul.slide-nav.thumbnails li{
+    max-width: 10%;
+}
+div.helium-slider ul.slide-nav.thumbnails li a{
+    background:none;
+    height:auto;
+    width:auto;
+    border-radius: 0;
+    border:2px solid transparent;
+    display: inline-block;
+    box-shadow:  0 2px 4px rgba(0,0,0,0.3);
+}
+div.helium-slider ul.slide-nav.thumbnails li a img{
+    max-width: 100%;
+}
+div.helium-slider ul.slide-nav.thumbnails li.active a{ background: none; border:2px solid #eee; }
     </style>
 </head>
 <body style="margin:0;">
@@ -424,6 +443,22 @@ div.helium-slider ul.slide-nav li{
 }
 div.helium-slider ul.slide-nav li.active a{ background: #444; }
 div.helium-slider ul.slide-nav li .access{ text-indent: -9999px; height:0; width:0; }
+div.helium-slider ul.slide-nav.thumbnails li{
+    max-width: 10%;
+}
+div.helium-slider ul.slide-nav.thumbnails li a{
+    background:none;
+    height:auto;
+    width:auto;
+    border-radius: 0;
+    border:2px solid transparent;
+    display: inline-block;
+    box-shadow:  0 2px 4px rgba(0,0,0,0.3);
+}
+div.helium-slider ul.slide-nav.thumbnails li a img{
+    max-width: 100%;
+}
+div.helium-slider ul.slide-nav.thumbnails li.active a{ background: none; border:2px solid #eee; }
 </textarea>
     <h3>4: initialize</h3>
     <p>Place the follow before the end of the BODY tag to initialize your slider.  this example includes all options for initializing the slider</p>
@@ -438,7 +473,7 @@ $(function() {
         paneDelay: [1000] ,     // pane delay before animate: milliseconds
         paneSpeed: [1500] ,     // pane speed of animate: milliseconds
         useNav: true ,          // use navigation: true or false
-        navTemplate: "" ,       // template for contents of nav list item
+        navTemplate: "" ,       // template for contents of nav list item. set to "thumbnail" for thumbnails of the first img tag in each slide
         autoPlay: 6000 ,        // auto play slides. delay between transitions: milliseconds (negative values reverse direction.  any value between -20 and 20 disables autoplay)
         speed: 100 ,            // speed of main slide animations
         easing: "swing" ,       // easing type: "swing" or "linear"
@@ -495,7 +530,7 @@ $(function() {
             mainFadeOut: false ,
             speed: 500,
             autoPlay: 2000,
-            navTemplate: "" ,       // template for contents of nav list item
+            navTemplate: 'thumbnail' ,       // template for contents of nav list item
             pauseControls: true,
             autoStopSlide: false ,
             autoStopLoop: false ,  // stop auto play after looping autoplay this many times: number or false
