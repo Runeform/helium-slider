@@ -226,8 +226,7 @@
 			for (g = 1; g <= this.vars.slideCount; ++g)  {
 				var template = orig.vars.navTemplate;
 				if(orig.vars.navTemplate === 'thumbnail'){
-					var src = $(orig.element).find('ul.slide-holder li:eq('+(g-1)+') .slide img:first').attr('src');
-					template = '<img src="'+src+'" />';
+					template = $(orig.element).find('ul.slide-holder li:eq('+(g-1)+') .slide img:first').clone().wrap('<p>').parent().html();
 					$(this.element).find('.slide-nav').addClass('thumbnails');
 				}
 				$(this.element).find('.slide-nav').append(' <li data-slide-index="'+g+'"><a href="">'+template+'</a><div class="access">Slide '+g+'</div></li>');
