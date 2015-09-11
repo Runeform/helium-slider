@@ -1,5 +1,5 @@
-/* 
- * Helium Slider v2.0.6
+/*
+ * Helium Slider v2.0.7
  * Developed by Harun eggleton - Under MIT License
  * jquery 1.8.3
  * jQuery-mutate (https://github.com/jqui-dot-net/jQuery-mutate)
@@ -7,9 +7,9 @@
  */
 
 ;(function ( $, window, document, undefined ) {
-	// Create defaults 
+	// Create defaults
 	var pluginName = "heliumSlider",
-		defaults = {				
+		defaults = {
 		paneFade: true ,        // pane fade in: true or false
 		paneXOffset: [300] ,    // pane animate X offset: pixel value
 		paneYOffset: [0] ,      // pane animate Y offset: pixel value
@@ -29,7 +29,7 @@
 		autoStopLoop: false ,   // stop auto play after looping autoplay this many times: number or false
 		autoStopPause: false,   // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions -MG 8/21/14
 		pauseOnHover: false ,   // pause autoplay on hover: true or false
-		pauseOnFocus: false ,   // pause autoplay when any element in the slider is focused: true or false
+		pauseOnFocus: true ,   // pause autoplay when any element in the slider is focused: true or false
 		pauseControls: false    // include controls for pause and play: true or false
 	},
 	priv = {
@@ -51,6 +51,7 @@
 		paneRPre: ['auto'],
 		paneBPre: ['auto'],
 		paneLPre: ['auto'],
+		focusResumeTimeout: null,
 		focusable: 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]',
 		targetSlide: false
 	};
@@ -73,7 +74,7 @@
 			var orig = this;
 			this.setWidth();
 			this.paneCalc();
-			$(this.element).mutate('height width', function(el,info) { 
+			$(this.element).mutate('height width', function(el,info) {
 			orig.setWidth();
 			orig.paneCalc();
 			});
@@ -101,12 +102,12 @@
 			//============================================================================
 			var i = -1;
 			while (++i < $(this.element).find('ul.slide-holder li:nth-child('+ this.vars.curr +') div.pane').length){
-			$(this.element).find('ul.slide-holder li:nth-child('+ this.vars.curr +') div.pane').eq(i).css('left' , this.vars.paneLPost[i]+ 'px').css('right' , this.vars.paneRPost[i] + 'px').css('top' , this.vars.paneTPost[i] + 'px').css('bottom' , this.vars.paneBPost[i] + 'px').delay(this.vars.paneDelay[i]).animate({ 
+			$(this.element).find('ul.slide-holder li:nth-child('+ this.vars.curr +') div.pane').eq(i).css('left' , this.vars.paneLPost[i]+ 'px').css('right' , this.vars.paneRPost[i] + 'px').css('top' , this.vars.paneTPost[i] + 'px').css('bottom' , this.vars.paneBPost[i] + 'px').delay(this.vars.paneDelay[i]).animate({
 				left: this.vars.paneL[i] ,
 				right: this.vars.paneR[i] ,
 				top: this.vars.paneT[i] ,
 				bottom: this.vars.paneB[i] ,
-				opacity: 1 
+				opacity: 1
 			}, this.vars.paneSpeed[i], this.vars.easing, this.setWidth());
 
 			}
@@ -139,7 +140,7 @@
 				}
 				if(touchMoveX - touchStartX > 40){
 					$(this.element).find('.slide-holder.trans').removeClass('trans');
-					orig.prevSlide();						
+					orig.prevSlide();
 				}
 			});
 
@@ -147,7 +148,7 @@
 			// Auto Play
 			//============================================================================
 
-			//initialize pause functionality			
+			//initialize pause functionality
 			this.initPause();
 
 			//set up first autoplay transition
@@ -161,10 +162,10 @@
 		},
 
 //============================================================================
-// setWidth function.  
+// setWidth function.
 // (calculates and sets all widths, resets position.  run initially and on mutate.)
 //============================================================================
-		setWidth: function () {					
+		setWidth: function () {
 		    this.vars.slideWidth = $(this.element).outerWidth();
 		    this.vars.slideCount = $(this.element).find('.slide-holder').find('li').length;
 		    this.vars.totalWidth = this.vars.slideCount * this.vars.slideWidth;
@@ -183,14 +184,14 @@
 			var i = -1;
 			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').length){
 				$(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style');
-				if ($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('left') != 'auto'){ 
+				if ($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('left') != 'auto'){
 					this.vars.paneL[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('left').slice(0,-2));
-				} else if($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('right') != 'auto'){ 
+				} else if($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('right') != 'auto'){
 					this.vars.paneR[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('right').slice(0,-2));
 				};
-				if ($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('top') != 'auto'){ 
+				if ($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('top') != 'auto'){
 					this.vars.paneT[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('top').slice(0,-2)) ;
-				} else if($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('bottom') != 'auto'){ 
+				} else if($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('bottom') != 'auto'){
 					this.vars.paneB[i] = Number($(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).removeAttr('style').css('bottom').slice(0,-2));
 				};
 				this.vars.paneLPost[i] = this.vars.paneL[i] + this.vars.paneXOffset[i];
@@ -201,11 +202,11 @@
 				this.vars.paneRPre[i] = this.vars.paneR[i] + this.vars.paneXOffset[i];
 				this.vars.paneTPre[i] = this.vars.paneT[i] - this.vars.paneYOffset[i];
 				this.vars.paneBPre[i] = this.vars.paneB[i] + this.vars.paneYOffset[i];
-			}	
+			}
 		},
 
 //============================================================================
-// finishLoad function.  
+// finishLoad function.
 // (removes loading styles upon running)
 //============================================================================
 		finishLoad: function () {
@@ -215,7 +216,7 @@
 			});
 		},
 //============================================================================
-// Nav functions 
+// Nav functions
 // (Creates nav items and populates this.vars.targetSlide var for next and prev functions)
 //============================================================================
 		initNav: function () {
@@ -242,7 +243,7 @@
 //============================================================================
 // Next Slide Function (animate all elements. update "this.vars.curr". loop on last slide.)
 //============================================================================
-		changeSlide: function () {		
+		changeSlide: function () {
 			var orig = this;
 		// add .trans class to mark start of animation
 			$(this.element).find('.slide-holder').addClass('trans');
@@ -256,7 +257,7 @@
 				var paneRIn = orig.vars.paneRPost;
 				var paneTIn = orig.vars.paneTPost;
 				var paneBIn = orig.vars.paneBPost;
-			} else {				
+			} else {
 				var paneLOut = orig.vars.paneLPost;
 				var paneROut = orig.vars.paneRPost;
 				var paneTOut = orig.vars.paneTPost;
@@ -267,18 +268,18 @@
 				var paneBIn = orig.vars.paneBPre;
 			}
 			var i = -1;
-			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').length){	
+			while (++i < $(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').length){
 		// animate out pane
-			$(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).stop().css('left' , this.vars.paneL[i] + 'px').css('right' , this.vars.paneR[i] + 'px').css('top' , this.vars.paneT[i] + 'px').css('bottom' , this.vars.paneB[i] + 'px').animate({ 
+			$(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(i).stop().css('left' , this.vars.paneL[i] + 'px').css('right' , this.vars.paneR[i] + 'px').css('top' , this.vars.paneT[i] + 'px').css('bottom' , this.vars.paneB[i] + 'px').animate({
 				left: paneLOut[i] ,
 				right: paneROut[i] ,
 				top: paneTOut[i] ,
 				bottom: paneBOut[i] ,
-				opacity: this.vars.paneFade 
+				opacity: this.vars.paneFade
 			}, this.vars.paneSpeed[i], this.vars.easing);
 			}
 		// animate slide and apply loop styles if necessary.  added fade animations
-			if(this.vars.mainFadeIn && this.vars.mainFadeOut){		
+			if(this.vars.mainFadeIn && this.vars.mainFadeOut){
 				if(this.vars.targetSlide > this.vars.slideCount){
 					this.vars.targetSlide = 1;
 				} else if(this.vars.targetSlide < 1){
@@ -297,13 +298,13 @@
 					});
 					orig.vars.curr = 1;
 				} else {
-					$(orig.element).find('.slide-holder').stop().css('left','-'+orig.vars.totalWidth+'px').animate({ left: '+=' + orig.vars.slideWidth }, orig.vars.speed, function(){			
+					$(orig.element).find('.slide-holder').stop().css('left','-'+orig.vars.totalWidth+'px').animate({ left: '+=' + orig.vars.slideWidth }, orig.vars.speed, function(){
 						$(orig.element).find('.slide-holder li:first-child').removeClass('loop').css('right','auto');
 						$(orig.element).find('.slide-holder li:nth-child(2)').css('margin-left','0px');
 					});
 					orig.vars.curr = this.vars.slideCount;
 				}
-			} else {				
+			} else {
 				$(this.element).find('.slide-holder').stop().animate({ left: ((this.vars.targetSlide-1) * this.vars.slideWidth)* -1 }, this.vars.speed);
 				this.vars.curr = this.vars.targetSlide;
 			}
@@ -312,13 +313,13 @@
 			$(this.element).find('ul.slide-holder li:nth-child('+ this.vars.curr +')').removeAttr('aria-hidden');
 		// animate in new pane
 		var x = -1;
-		while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').length){	
-			$(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(x).stop().css('left' , paneLIn[x] + 'px').css('right' , paneRIn[x] + 'px').css('top' , paneTIn[x] + 'px').css('bottom' , paneBIn[x] + 'px').delay(this.vars.paneDelay[x]).animate({ 
+		while (++x < $(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').length){
+			$(this.element).find('li:nth-child('+ this.vars.curr +') div.pane').eq(x).stop().css('left' , paneLIn[x] + 'px').css('right' , paneRIn[x] + 'px').css('top' , paneTIn[x] + 'px').css('bottom' , paneBIn[x] + 'px').delay(this.vars.paneDelay[x]).animate({
 				left: this.vars.paneL[x] ,
 				right: this.vars.paneR[x] ,
 				top: this.vars.paneT[x] ,
 				bottom: this.vars.paneB[x] ,
-				opacity: 1 
+				opacity: 1
 			}, this.vars.paneSpeed[x], this.vars.easing);
 		}
 			this.vars.targetSlide = false;
@@ -326,12 +327,12 @@
 		// remove .trans class and reset timer when animation is complete
 			$(this.element).find('.slide-holder.trans').promise().done(function(){
 						$(orig.element).find('.slide-holder').removeClass('trans');
-						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide)){ 
+						if (orig.vars.autoPlay >= 20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide)){
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.nextSlide();
 								if(orig.vars.curr == orig.vars.slideCount){	++orig.vars.autoLoopCount }
 							}, orig.vars.autoPlay);
-						} else if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide)){ 
+						} else if (orig.vars.autoPlay <= -20 && !$(orig.element).find('.pauser.paused').length && !(orig.vars.autoLoopCount == orig.vars.autoStopLoop && orig.vars.curr == orig.vars.autoStopSlide)){
 							orig.vars.autoTimer = setTimeout(function(){
 								orig.prevSlide();
 								if(orig.vars.curr == 1){ ++orig.vars.autoLoopCount }
@@ -350,7 +351,7 @@
 							}
 						}
 						orig.vars.afterSlide();
-						
+
 						$(orig.element).find('ul.slide-holder li').find(orig.vars.focusable).attr('tabindex','-1');
 						$(orig.element).find('ul.slide-holder li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
 			});
@@ -423,27 +424,36 @@
 				$(orig.element).find('.controls').removeClass('on');
 			}
 			if(this.vars.pauseOnHover){
-				$(orig.element).find('ul.slide-holder, .pauser').mouseover(function(event){
+				$(orig.element).find('ul.slide-holder').mouseover(function(event){
 					orig.pauseAutoPlay();
+					event.stopPropagation();
+				});
+				$(orig.element).find('.pauser').mouseover(function(event){
 					event.stopPropagation();
 				});
 				$(orig.element).find('ul.slide-holder').mouseout(function(event){
 					if((!orig.vars.pauseOnFocus || !$(orig.element).find('ul.slide-holder *:focus, ul.slide-nav li[data-slide-index] *:focus, .next:focus, .prev:focus').length) && !$(orig.element).find('.pauser.stopped').length){
 						orig.resumeAutoPlay(orig.vars.autoPlay)
 					}
-					event.stopPropagation();					
+					event.stopPropagation();
 				});
 			}
 			if(this.vars.pauseOnFocus){
 				$(orig.element).find('ul.slide-holder, ul.slide-nav li[data-slide-index], .next, .prev').focusin(function(event){
+					if(orig.vars.focusResumeTimeout){
+						clearTimeout(orig.vars.focusResumeTimeout);
+						orig.vars.focusResumeTimeout = null;
+					}
 					orig.pauseAutoPlay();
 					event.stopPropagation();
 				});
 				$(orig.element).find('ul.slide-holder, ul.slide-nav li[data-slide-index], .next, .prev').focusout(function(event){
-					if((!orig.vars.pauseOnHover || !$(orig.element).find('*:hover').length) && !$(orig.element).find('.pauser.stopped').length){
-						orig.resumeAutoPlay(orig.vars.autoPlay)
+					if((!orig.vars.pauseOnHover || !$(orig.element).find('ul.slide-holder:hover').length) && !$(orig.element).find('.pauser.stopped').length){
+						orig.vars.focusResumeTimeout = setTimeout(function(){
+							orig.resumeAutoPlay(100);
+						},1000);
 					}
-					event.stopPropagation();					
+					event.stopPropagation();
 				});
 			}
 			if(this.vars.pauseControls){
@@ -456,7 +466,7 @@
 					} else {
 						orig.stopAutoPlay();
 					}
-					return false;				
+					return false;
 				});
 			}
 		}
