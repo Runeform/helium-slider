@@ -30,7 +30,8 @@
 		autoStopPause: false,   // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions -MG 8/21/14
 		pauseOnHover: false ,   // pause autoplay on hover: true or false
 		pauseOnFocus: true ,   // pause autoplay when any element in the slider is focused: true or false
-		pauseControls: false    // include controls for pause and play: true or false
+		pauseControls: false,    // include controls for pause and play: true or false
+		adaptHeight: false    // include controls for pause and play: true or false
 	},
 	priv = {
 		slideWidth: false,
@@ -76,6 +77,7 @@
 			this.paneCalc();
 			$(this.element).mutate('height width', function(el,info) {
 			orig.setWidth();
+			orig.setHeight();
 			orig.paneCalc();
 			});
 			if(this.vars.useNav){this.initNav()}
@@ -159,22 +161,34 @@
 					orig.vars.autoLoopCount++;
 					orig.prevSlide()
 				}, (this.vars.autoPlay - this.vars.speed) * -1)}
-		},
+			},
 
-//============================================================================
-// setWidth function.
-// (calculates and sets all widths, resets position.  run initially and on mutate.)
-//============================================================================
-		setWidth: function () {
-		    this.vars.slideWidth = $(this.element).outerWidth();
-		    this.vars.slideCount = $(this.element).find('.slide-holder').find('li').length;
-		    this.vars.totalWidth = this.vars.slideCount * this.vars.slideWidth;
-		    $(this.element).find('ul.slide-holder').width(this.vars.totalWidth).css('left', ((this.vars.curr - 1) * this.vars.slideWidth) * -1);
-		    $(this.element).find('ul.slide-holder li').width(this.vars.slideWidth);
-		    if($(this.element).hasClass('loading')){
-		    	this.finishLoad();
-		    }
-		},
+			//============================================================================
+			// setWidth function.
+			// (calculates and sets all widths, resets position.  run initially and on mutate.)
+			//============================================================================
+			setWidth: function () {
+			    this.vars.slideWidth = $(this.element).outerWidth();
+			    this.vars.slideCount = $(this.element).find('.slide-holder').find('li').length;
+			    this.vars.totalWidth = this.vars.slideCount * this.vars.slideWidth;
+			    $(this.element).find('ul.slide-holder').width(this.vars.totalWidth).css('left', ((this.vars.curr - 1) * this.vars.slideWidth) * -1);
+			    $(this.element).find('ul.slide-holder li').width(this.vars.slideWidth);
+			    if($(this.element).hasClass('loading')){
+			    	this.finishLoad();
+			    }
+			},
+
+			//============================================================================
+			// setHeight function.
+			// (calculates and sets all widths, resets position.  run initially and on mutate.)
+			//============================================================================
+			setHeight: function () {
+				var orig = this;
+				if(this.vars.adaptHeight){
+					var currHeight = $(orig.element).find('ul.slide-holder li:nth-child('+ orig.vars.curr +')').height();
+					$(orig.element).find('.slide-window').height(currHeight);
+				}
+			},
 
 //============================================================================
 // Pane Calc
@@ -351,9 +365,10 @@
 							}
 						}
 						orig.vars.afterSlide();
-
+						orig.setHeight();
 						$(orig.element).find('ul.slide-holder li').find(orig.vars.focusable).attr('tabindex','-1');
 						$(orig.element).find('ul.slide-holder li:nth-child('+ orig.vars.curr +')').find(orig.vars.focusable).removeAttr('tabindex');
+
 			});
 		},
 

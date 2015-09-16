@@ -65,6 +65,7 @@ div.helium-slider div.slide-window{
     overflow:hidden;
     position: relative;
     margin: 0;
+    transition: height 0.5s ease;
     }
 div.helium-slider.loading{ background: url('img/loading.gif') no-repeat center center; }
 div.helium-slider ul.slide-holder{
@@ -82,7 +83,7 @@ div.helium-slider ul.slide-holder li.loop{
     position: absolute !important;
     float:none !important;
     }
-div.helium-slider ul.slide-holder li .slide img{ width:100%; }
+div.helium-slider ul.slide-holder li .slide img{ width:100%; display:block;}
 div.helium-slider ul.slide-holder li .pane{ position: absolute; }
 
 /*==== customizable elements ====*/
@@ -222,7 +223,7 @@ div.helium-slider ul.slide-nav.thumbnails li.active a{ background: none; border:
         <li>any number of individually animated panes on each slide (these fully customizable HTML elements each have thier own options for speed, delay, x offset, y offset and fade.)</li>
     </ul>
     <h2>Examples:</h2>
-    <div id="slider-eg-1" class="helium-slider loading">
+    <div id="slider-eg-1" class="helium-slider loading" style="margin-bottom:100px;">
         <a href="" class="next">next</a><a href="" class="prev">prev</a>
         <ul class="slide-nav">
         </ul>
@@ -235,13 +236,13 @@ div.helium-slider ul.slide-nav.thumbnails li.active a{ background: none; border:
                     <div class="pane caption3">Pane3</div>
                 </li>
                 <li>
-                    <div class="slide"><img src="http://placehold.it/900x400&text=slide2"></div>
+                    <div class="slide"><img src="http://placehold.it/900x500&text=slide2"></div>
                     <div class="pane caption"><a href="">Pane1</a></div>
                     <div class="pane caption2">Pane2</div>
                     <div class="pane caption3">Pane3</div>
                 </li>
                 <li>
-                    <div class="slide"><img src="http://placehold.it/900x400&text=slide3"></div>
+                    <div class="slide"><img src="http://placehold.it/900x600&text=slide3"></div>
                     <div class="pane caption"><a href="">Pane1</a></div>
                     <div class="pane caption2">Pane2</div>
                     <div class="pane caption3">Pane3</div>
@@ -324,6 +325,7 @@ div.helium-slider div.slide-window{
     overflow:hidden;
     position: relative;
     margin: 0;
+    transition: height 0.5s ease;
     }
 div.helium-slider.loading{ background: url('img/loading.gif') no-repeat center center; }
 div.helium-slider ul.slide-holder{
@@ -466,7 +468,7 @@ div.helium-slider ul.slide-nav.thumbnails li.active a{ background: none; border:
 <textarea readonly name="" style="height:330px;">
 <script type="text/javascript" charset="utf-8">
 $(function() {
-    $("#your-slider-id").heliumSlider({        
+    $("#your-slider-id").heliumSlider({
         paneFade: true ,        // pane fade in: true or false
         paneXOffset: [300] ,    // pane animate X offset: pixel value
         paneYOffset: [0] ,      // pane animate Y offset: pixel value
@@ -487,7 +489,8 @@ $(function() {
         autoStopPause: false,   // when autoplay ends, pause and keep controls available. clicking play button replays autoStop transitions
         pauseOnHover: false ,   // pause autoplay on hover: true or false
         pauseOnFocus: false ,   // pause autoplay when any element in the slider is focused: true or false
-        pauseControls: false    // include controls for pause and play: true or false
+        pauseControls: false,   // include controls for pause and play: true or false
+        adaptHeight: false      // adapt the height of the slider to the current slide
     });
 });
 </script></textarea>
@@ -537,6 +540,7 @@ $(function() {
             autoStopPause: false,   // when autoplay ends, pause and keep controls available.
             pauseOnHover: false,
             pauseOnFocus: true,
+            adaptHeight: true,
             easing: 'linear'
         });
         $("#slider-eg-2").heliumSlider({
